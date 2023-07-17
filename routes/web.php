@@ -4,12 +4,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\BaseUiController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\DatabarangkeluarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,5 +52,6 @@ Route::post('/admin/menu/store', [MenuController::class, 'store'])->name('menu.s
 Route::get('/admin/menu/edit/{id}', [MenuController::class, 'edit'])->name('menu.edit');
 Route::post('/admin/menu/update/{id}', [MenuController::class, 'update'])->name('menu.update');
 Route::delete('/admin/menu/destroy/{id}', [MenuController::class, 'destroy'])->name('menu.destroy');
+Route::get('/admin/transaksi', [DatabarangkeluarController::class, 'index'])->name('barangkeluar');
 
 

@@ -54,7 +54,6 @@
                                             <th>Role</th>
                                             <th>Username</th>
                                             <th>Email</th>
-                                            <th>Password</th>
                                             <th>Gender</th>
                                             <th>User Token</th>
                                             <th>Photo</th>
@@ -78,9 +77,6 @@
                                                 </td>
                                                 <td>
                                                     {{ $item->User_email }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->User_password }}
                                                 </td>
                                                 <td>
                                                     {{ $item->User_gender }}

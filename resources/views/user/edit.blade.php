@@ -6,7 +6,7 @@
             <div class="m-5">
                 @foreach ($dtUser as $item)
                     <form action="{{ route('user.update', $item->User_id) }}" method="POST" class="mb-3"
-                        enctype="multipart/form-data">
+                        enctype="multipart/form-data" id="form-id" name="form-edit-user">
                         @csrf
 
                         <div class="row mb-3">
@@ -34,8 +34,10 @@
                                 <label for="password" class="form-label-md-6">Password</label>
                             </div>
                             <div class="col-md-10">
-                                <input type="password" name="password" id="password" class="form-control"
-                                    value="{{ $item->User_password }}">
+                                <input type="password" name="password" id="password" class="form-control" value="">
+                                <input type="hidden" name="current_password" value="{{ $item->User_password }}">
+                                <span id="password_error" style="color: red;">Isikan password jika anda ingin
+                                    menggantinya</span>
                             </div>
                         </div>
 
@@ -43,9 +45,9 @@
                             <label for="gender" class="col-md-2 col-form-label text-md-start">Gender</label>
                             <div class="col-md-10 {{ $errors->has('gender') ? 'has-error' : '' }}">
                                 <select name="gender" id="gender" class="form-control">
-                                    <option value="Male" {{ $item->User_name == 'Male' ? 'selected' : '' }}>Male
+                                    <option value="Male" {{ $item->User_gender == 'Male' ? 'selected' : '' }}>Male
                                     </option>
-                                    <option value="Female" {{ $item->User_name == 'Female' ? 'selected' : '' }}>Female
+                                    <option value="Female" {{ $item->User_gender == 'Female' ? 'selected' : '' }}>Female
                                     </option>
                                 </select>
                             </div>
@@ -91,4 +93,27 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        var passwordInput = document.getElementsByName('password');
+        var currentPasswordInput = document.getElementsByName('current_password')[0];
+
+        passwordInput.addEventListener('focus', function() {
+            this.value = '';
+            this.removeEventListener('focus', arguments.callee);
+        });
+
+        document.getElementsByName('form-edit-user').addEventListener('submit', function(event) {
+            var passwordValue = passwordInput.value;
+
+            if (passwordValue === '') {
+                passwordInput.value = currentPasswordInput.value;
+            } else {
+                currentPasswordInput.value = passwordValue;
+            }
+
+            event.preventDefault();
+        });
+    </script>
 @endsection

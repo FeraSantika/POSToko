@@ -18,16 +18,16 @@
 
                             <div class="text-center w-75 m-auto">
                                 <h4 class="text-dark-50 text-center pb-0 fw-bold">Sign In</h4>
-                                <p class="text-muted mb-4">Enter username and password to access admin panel.
+                                <p class="text-muted mb-4">Enter your email address and password to access admin panel.
                                 </p>
                             </div>
 
-                            <form method="POST" action="{{ route('login') }}">
+                            <form method="POST" action="{{ route('Login') }}">
                                 @csrf
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Username</label>
                                     <input class="form-control" name="username" type="text" id="username" required=""
-                                        placeholder="Enter your username">
+                                        placeholder="Enter your email">
                                 </div>
 
                                 <div class="mb-3">

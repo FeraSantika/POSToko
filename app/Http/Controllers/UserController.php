@@ -16,12 +16,14 @@ class UserController extends Controller
         return view('user.user', compact('dtUser'));
     }
 
+
     public function create()
     {
         $dtRole = DataRole::get();
         return view('user.create', compact('dtRole'));
     }
 
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -57,7 +59,6 @@ class UserController extends Controller
         return redirect()->route('user')->with('success', 'Data stored successfully');
     }
 
-
     public function edit($User_id)
     {
         $dtRole = DataRole::get();
@@ -70,7 +71,6 @@ class UserController extends Controller
         $request->validate([
             'username' => 'required',
             'email' => 'required|email',
-            'password' => 'required',
             'gender' => 'required',
             'role' => 'required',
             'token' => 'required',
@@ -99,7 +99,6 @@ class UserController extends Controller
 
         return redirect()->route('user')->with('success', 'Data updated successfully');
     }
-
 
     public function destroy($User_id)
     {

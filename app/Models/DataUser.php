@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class DataUser extends Model
+class DataUser extends Authenticatable
 {
     use HasFactory;
-    public $table = 'data_user';
+    protected $table = 'data_user';
     protected $fillable = [
         'User_id',
         'User_name',
@@ -20,7 +21,11 @@ class DataUser extends Model
         'User_token',
     ];
 
+    protected $User_name = 'User_name';
+    protected $User_password = 'User_password';
+
     public function role(){
         return $this->belongsTo(DataRole::class, 'Role_id', 'Role_id');
     }
+
 }

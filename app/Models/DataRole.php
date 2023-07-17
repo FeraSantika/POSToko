@@ -22,6 +22,11 @@ class DataRole extends Model
 
     public function user()
     {
-        return $this->hasMany(DataUser::class,'Role_id', 'Role_id');
+        return $this->hasMany(DataUser::class, 'Role_id', 'Role_id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
     }
 }
