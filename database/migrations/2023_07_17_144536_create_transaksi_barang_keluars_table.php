@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('transaksi_barang_keluar', function (Blueprint $table) {
             $table->bigIncrements('kode_transaksi');
             $table->integer('kode_kasir');
-            $table->date('tanggal');
+            $table->date('tanggal_tbk');
             $table->string('customer');
-            $table->char('diskon');
+            $table->boolean('diskon_tbk');
             $table->integer('total_bayar');
             $table->integer('dibayar');
             $table->integer('kembalian');

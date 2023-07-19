@@ -14,7 +14,8 @@ class DataBarang extends Model
         'kode_kategori',
         'nama_barang',
         'harga_jual',
-        'diskon',
+        'diskon_barang',
+        'stok_barang'
     ];
 
     public function kategori(){

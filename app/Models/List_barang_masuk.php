@@ -14,6 +14,6 @@ class List_barang_masuk extends Model
         'kode_barang',
         'harga_jual',
         'harga_beli',
-        'jumlah'
+        'jumlah_bm'
     ];
 }

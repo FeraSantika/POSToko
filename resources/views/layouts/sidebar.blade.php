@@ -82,7 +82,23 @@
                     </ul>
                 </div>
             </li>
-{{--
+
+            <li class="side-nav-item">
+                <a href="{{ route('barang') }}"
+                    class="side-nav-link {{ Route::current()->getName() == 'barang' ? 'active' : '' }}">
+                    <i class="uil-shop"></i>
+                    <span> Produk </span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a data-bs-toggle="collapse" href="{{route('kategori')}}" aria-expanded="false"
+                    class="side-nav-link {{ Route::current()->getName() == 'kategori' ? 'active' : '' }}">
+                    <i class="uil-tag-alt"></i>
+                    <span> Kategori </span>
+                </a>
+            </li>
+            {{--
             <li class="side-nav-title">Apps</li>
 
             <li class="side-nav-item">

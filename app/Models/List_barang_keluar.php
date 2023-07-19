@@ -12,8 +12,8 @@ class List_barang_keluar extends Model
     protected $fillable = [
         'kode_barang',
         'kode_transaksi',
-        'jumlah',
+        'jumlah_bk',
         'harga_jual',
-        'diskon',
+        'diskon_bk',
     ];
 }

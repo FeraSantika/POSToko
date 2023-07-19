@@ -15,8 +15,9 @@ return new class extends Migration
             $table->bigIncrements('kode_barang');
             $table->integer('kode_kategori');
             $table->string('nama_barang');
-            $table->char('harga_jual');
-            $table->char('diskon');
+            $table->integer('harga_jual');
+            $table->boolean('diskon_barang');
+            $table->integer('stok_barang');
             $table->timestamps();
         });
     }

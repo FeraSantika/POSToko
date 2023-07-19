@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('kode_transaksi');
             $table->integer('harga_beli');
             $table->integer('harga_jual');
-            $table->integer('jumlah');
+            $table->integer('jumlah_bm');
             $table->timestamps();
         });
     }

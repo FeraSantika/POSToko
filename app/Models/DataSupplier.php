@@ -13,6 +13,6 @@ class DataSupplier extends Model
         'kode_supplier',
         'nama_supplier',
         'alamat_supplier',
-        'nohp_supplier',
+        'telp_supplier',
     ];
 }

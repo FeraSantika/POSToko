@@ -6,7 +6,9 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ErrorController;
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BaseUiController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthenticationController;
@@ -53,5 +55,19 @@ Route::get('/admin/menu/edit/{id}', [MenuController::class, 'edit'])->name('menu
 Route::post('/admin/menu/update/{id}', [MenuController::class, 'update'])->name('menu.update');
 Route::delete('/admin/menu/destroy/{id}', [MenuController::class, 'destroy'])->name('menu.destroy');
 Route::get('/admin/transaksi', [DatabarangkeluarController::class, 'index'])->name('barangkeluar');
+Route::get('/admin/barang', [BarangController::class, 'index'])->name('barang');
+Route::get('/admin/barang/create', [BarangController::class, 'create'])->name('barang.create');
+Route::post('/admin/barang/store', [BarangController::class, 'store'])->name('barang.store');
+Route::get('/admin/barang/edit/{id}', [BarangController::class, 'edit'])->name('barang.edit');
+Route::post('/admin/barang/update/{id}', [BarangController::class, 'update'])->name('barang.update');
+Route::delete('/admin/barang/destroy/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
+Route::get('/admin/kategori', [KategoriController::class, 'index'])->name('kategori');
+Route::get('/admin/kategori/create', [KategoriController::class, 'create'])->name('kategori.create');
+Route::post('/admin/kategori/store', [KategoriController::class, 'store'])->name('kategori.store');
+Route::get('/admin/kategori/edit/{id}', [KategoriController::class, 'edit'])->name('kategori.edit');
+Route::post('/admin/kategori/update/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+Route::delete('/admin/kategori/destroy/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+Route::get('/search', [DatabarangkeluarController::class, 'search'])->name('search');
+
 
 

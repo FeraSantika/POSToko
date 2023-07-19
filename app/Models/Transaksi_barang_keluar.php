@@ -12,9 +12,9 @@ class Transaksi_barang_keluar extends Model
     protected $fillable = [
         'kode_transaksi',
         'kode_kasir',
-        'tanggal',
+        'tanggal_tbk',
         'customer',
-        'diskon',
+        'diskon_tbk',
         'total_bayar',
         'dibayar',
         'kembalian',

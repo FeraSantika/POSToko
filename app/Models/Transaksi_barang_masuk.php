@@ -11,7 +11,7 @@ class Transaksi_barang_masuk extends Model
     public $table = 'transaksi_barang_masuk';
     protected $fillable = [
         'kode_transaksi',
-        'tanggal',
+        'tanggal_tbm',
         'kode_supplier'
     ];
 }
