@@ -35,6 +35,7 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
 
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="stylesheet" href="css/style.css">
@@ -61,13 +62,13 @@
         2018 -
         <script>
             document.write(new Date().getFullYear())
-        </script> © Hyper - Coderthemes.com
-    </footer>
-    <!-- Vendor js -->
-    <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
+        </script>
+        <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
+        <script src="{{ asset('assets/js/app.min.js') }}"></script>
+        <script src="{{ asset('assets/js/jquery-1.11.2.min.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+        <script src="https://www.jsdelivr.com/package/npm/jquery"></script>
 
-    <!-- App js -->
-    <script src="{{ asset('assets/js/app.min.js') }}"></script>
 
 </body>
 

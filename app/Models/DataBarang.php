@@ -21,4 +21,8 @@ class DataBarang extends Model
     public function kategori(){
         return $this->belongsTo(kategori::class, 'kode_kategori', 'kode_kategori');
     }
+
+    public function listbarangkeluar(){
+        return $this->hasMany(List_barang_keluar::class, 'kode_barang', 'kode_barang');
+    }
 }

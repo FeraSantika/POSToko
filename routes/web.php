@@ -54,7 +54,7 @@ Route::post('/admin/menu/store', [MenuController::class, 'store'])->name('menu.s
 Route::get('/admin/menu/edit/{id}', [MenuController::class, 'edit'])->name('menu.edit');
 Route::post('/admin/menu/update/{id}', [MenuController::class, 'update'])->name('menu.update');
 Route::delete('/admin/menu/destroy/{id}', [MenuController::class, 'destroy'])->name('menu.destroy');
-Route::get('/admin/transaksi', [DatabarangkeluarController::class, 'index'])->name('barangkeluar');
+// Route::get('/admin/transaksi', [DatabarangkeluarController::class, 'index'])->name('barangkeluar');
 Route::get('/admin/barang', [BarangController::class, 'index'])->name('barang');
 Route::get('/admin/barang/create', [BarangController::class, 'create'])->name('barang.create');
 Route::post('/admin/barang/store', [BarangController::class, 'store'])->name('barang.store');
@@ -68,6 +68,13 @@ Route::get('/admin/kategori/edit/{id}', [KategoriController::class, 'edit'])->na
 Route::post('/admin/kategori/update/{id}', [KategoriController::class, 'update'])->name('kategori.update');
 Route::delete('/admin/kategori/destroy/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 Route::get('/search', [DatabarangkeluarController::class, 'search'])->name('search');
+Route::controller(DatabarangkeluarController::class)->group(function(){
+    Route::get('/admin/transaksi', 'index')->name('transaksi');
+    Route::post('/admin/transaksi/store', 'store')->name('transaksi.store');
+    Route::delete('/admin/transaksi/list/destroy/{id}', 'destroy')->name('list.destroy');
+    Route::post('/addlistbarang', 'insertlist')->name('insertlist');
+    Route::get('/autocomplete', 'autocomplete')->name('autocomplete');
+});
 
 
 

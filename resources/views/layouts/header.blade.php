@@ -29,3 +29,5 @@
 <!-- Theme Config Js -->
 <script src="{{ asset('assets/js/hyper-config.js') }}"></script>
 {{-- <script src="../assets/js/hyper-config.js"></script> --}}
+
+

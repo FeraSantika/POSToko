@@ -854,12 +854,6 @@
 <script src="{{ asset('assets/vendor/clipboard/clipboard.min.js') }}"></script>
 <script src="{{ asset('assets/js/hyper-syntax.js') }}"></script>
 
-<!-- Apex Chart Candlestick Demo js -->
-<script src="../../../apexcharts.com/samples/assets/stock-prices.js"></script>
-<script src="../../../apexcharts.com/samples/assets/series1000.js"></script>
-<script src="../../../apexcharts.com/samples/assets/github-data.js"></script>
-<script src="../../../apexcharts.com/samples/assets/irregular-data-series.js"></script>
-
 <!-- Gantt js-->
 <script src="{{ asset('assets/vendor/frappe-gantt/frappe-gantt.min.js') }}"></script>
 
@@ -876,14 +870,15 @@
 
 <!-- Dashboard App js -->
 <script src="{{ asset('assets/js/pages/demo.dashboard.js') }}"></script>
-<script src="{{ asset('assets/js/pages/demo.dashboard-analytics.js') }}"></script>
-<script src="{{ asset('assets/js/pages/demo.dashboard-projects.js') }}"></script>
-<script src="{{ asset('assets/js/pages/demo.crm-dashboard.js') }}"></script>
-<script src="{{ asset('assets/js/pages/demo.dashboard-wallet.js') }}"></script>
-<script src="{{ asset('assets/js/pages/demo.calendar.js') }}"></script>
-<script src="{{ asset('assets/vendor/fullcalendar/main.min.js') }}"></script>
-<script src="{{ asset('assets/js/pages/demo.crm-project.js') }}"></script>
-<script src="{{ asset('assets/js/pages/demo.crm-management.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
 <!-- App js -->
 <script src="{{ asset('assets/js/app.min.js') }}"></script>

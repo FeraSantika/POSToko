@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('kode_kategori');
             $table->string('nama_barang');
             $table->integer('harga_jual');
-            $table->boolean('diskon_barang');
+            $table->integer('diskon_barang');
             $table->integer('stok_barang');
             $table->timestamps();
         });

@@ -10,10 +10,15 @@ class List_barang_keluar extends Model
     use HasFactory;
     public $table = 'list_barang_keluar';
     protected $fillable = [
-        'kode_barang',
+        'list_id',
         'kode_transaksi',
+        'kode_barang',
         'jumlah_bk',
         'harga_jual',
         'diskon_bk',
     ];
+
+    public function barang(){
+        return $this->belongsTo(DataBarang::class, 'kode_barang', 'kode_barang');
+    }
 }
