@@ -64,14 +64,14 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-centered w-100 dt-responsive nowrap">
+                                <table class="table table-centered w-100 dt-responsive nowrap m-3">
                                     <thead class="table-light">
                                         <tr>
-                                            {{-- <th>No </th> --}}
                                             <th>Kode</th>
                                             <th>Barang</th>
                                             <th>Qty</th>
                                             <th>Diskon</th>
+                                            <th>Harga</th>
                                             <th>Total</th>
                                             <th>Action</th>
                                         </tr>
@@ -81,35 +81,33 @@
                                             <tr id="{{ $item->list_id }}">
                                                 <td>{{ $item->kode_barang }}</td>
                                                 <td>{{ $item->barang->nama_barang }}</td>
-                                                <td>{{ $item->jumlah_bk }}</td>
+                                                <td><input type="text" name="qty" id="qty-{{ $item->list_id }}"
+                                                        class="form-control" value="{{ $item->jumlah_bk }}"></td>
                                                 <td>{{ $item->diskon_bk }}</td>
-                                                <td>{{ $item->harga_jual * $item->jumlah_bk }}</td>
+                                                <td>{{ $item->harga_jual }}</td>
+                                                <td class="subtotal" id="total-{{ $item->list_id }}">
+                                                    {{ $item->harga_jual * $item->jumlah_bk }}</td>
                                                 <td>
-                                                    <a href="" class="action-icon">
+                                                    <a href="javascript:void(0);" class="action-icon"
+                                                        onclick="edit('{{ $item->list_id }}');">
                                                         <i class="mdi mdi-square-edit-outline"></i>
                                                     </a>
-                                                    <form id="delete-form-{{ $item->kode_barang }}"
-                                                        action="{{ route('list.destroy', $item->kode_barang) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <a href="javascript:void(0);" class="action-icon"
-                                                            id="btn-delete-post"
-                                                            onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?'))
-                                                            document.getElementById('delete-form-{{ $item->kode_barang }}').submit();">
-                                                            <i class="mdi mdi-delete"></i>
-                                                        </a>
-                                                    </form>
+                                                    <a href="javascript:void(0);" class="action-icon"
+                                                        onclick="hapus('{{ $item->list_id }}');">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        {{-- <tr>
-                                        <td colspan="5">Grand Total</td>
-                                        <td></td>
-                                    </tr> --}}
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5">Grand Total</td>
+                                            <td id="grandTotal" colspan="2"></td>
+                                        </tr>
                                     </tbody>
                                 </table>
-                                <div class="row mb-3">
+                                <div class="row mb-3 m-3">
                                     <div class="col-md-2">
                                         <label for="diskon" class="form-label-md-6">Diskon</label>
                                     </div>
@@ -117,7 +115,7 @@
                                         <input type="text" name="diskon" id="diskon" class="form-control">
                                     </div>
                                 </div>
-                                <div class="row mb-3">
+                                <div class="row mb-3 m-3">
                                     <div class="col-md-2">
                                         <label for="totalbayar" class="form-label-md-6">Total Bayar</label>
                                     </div>
@@ -125,7 +123,7 @@
                                         <input type="text" name="totalbayar" id="totalbayar" class="form-control">
                                     </div>
                                 </div>
-                                <div class="row mb-3">
+                                <div class="row mb-3 m-3">
                                     <div class="col-md-2">
                                         <label for="dibayar" class="form-label-md-6">Dibayar</label>
                                     </div>
@@ -133,7 +131,7 @@
                                         <input type="text" name="dibayar" id="dibayar" class="form-control">
                                     </div>
                                 </div>
-                                <div class="row mb-3">
+                                <div class="row mb-3 m-3">
                                     <div class="col-md-2">
                                         <label for="kembalian" class="form-label-md-6">Kembalian</label>
                                     </div>
@@ -141,7 +139,7 @@
                                         <input type="text" name="kembalian" id="kembalian" class="form-control">
                                     </div>
                                 </div>
-                                <div class="mt-3 text-center">
+                                <div class="mt-5 mb-5 text-center">
                                     <button class="btn btn-primary" type="submit" id="simpan">Simpan</button>
                                 </div>
                             </div>
@@ -155,6 +153,100 @@
 @endsection
 @section('script')
     <script type="text/javascript">
+        function updateGrandTotal() {
+            let grandTotal = 0;
+            $(".subtotal").each(function() {
+                grandTotal += parseFloat($(this).text());
+            });
+            $("#grandTotal").text(grandTotal.toLocaleString().replace(/,/g, '.'));
+        }
+
+        updateGrandTotal();
+
+        function hapus(list_id) {
+            var url = "{{ route('list.destroy', ':list_id') }}";
+            url = url.replace(':list_id', list_id);
+            Swal.fire({
+                title: "Yakin ingin menghapus data ini?",
+                text: "Ketika data terhapus, anda tidak bisa mengembalikan data tersbut!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Hapus!"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: url,
+                        type: "get",
+                        dataType: "JSON",
+                        success: function(data) {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Data berhasil dihapus',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            console.log("berhasil hapus data");
+                            $("#" + list_id).remove();
+                            updateGrandTotal();
+                        }
+                    })
+                }
+            })
+        }
+
+        function edit(list_id) {
+            var url = "{{ route('list.update') }}";
+            var currentQty = $('#qty-' + list_id).val();
+            var currentJumlah = $('#total-' + list_id).val();
+            var newData = {
+                'list_id': list_id,
+                'qty': currentQty,
+                'jumlah': currentJumlah,
+                '_token': $("meta[name='csrf-token']").attr("content")
+            }
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "JSON",
+                data: newData,
+                success: function(response) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Data berhasil diubah',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    let newRow = `
+                        <tr id="${response.data.list_id}">
+                            <td>${response.data.kode}</td>
+                            <td>${response.data.nama}</td>
+                            <td>
+                                <input type="text" name="qty" id="qty-${response.data.list_id}" class="form-control" value="${response.data.qty}">
+                            </td>
+                            <td>${response.data.diskon}</td>
+                            <td>${response.data.harga}</td>
+                            <td class="subtotal">${response.data.jumlah}</td>
+                            <td>
+                                <a href="javascript:void(0);" class="action-icon" onclick="edit('${response.data.list_id}')">
+                                    <i class="mdi mdi-square-edit-outline"></i>
+                                </a>
+                                <a href="javascript:void(0)" onclick="hapus('${response.data.list_id}')" class="action-icon"><i class="mdi mdi-delete"></i></a>
+                            </td>
+                        </tr>
+                    `;
+                    $(`#${response.data.list_id}`).replaceWith(newRow);
+                    updateGrandTotal();
+                    console.log(response.data);
+                }
+            });
+        }
+
         $(document).ready(function() {
             var path = "{{ route('autocomplete') }}";
             var nourut = 1;
@@ -165,7 +257,7 @@
                         type: 'GET',
                         dataType: "json",
                         data: {
-                            search: request.term
+                            cari: request.term
                         },
                         success: function(data) {
                             response(data);
@@ -180,7 +272,7 @@
                 }
             });
 
-            var path3 = "{{ route('insertlist') }}";
+            var insertlist = "{{ route('insertlist') }}";
             $('#add').click(function(e) {
                 e.preventDefault();
                 let kodetransaksi = $('#notransaksi').val();
@@ -195,7 +287,7 @@
                 });
 
                 $.ajax({
-                    url: path3,
+                    url: insertlist,
                     type: "POST",
                     cache: false,
                     data: {
@@ -207,54 +299,31 @@
 
                     success: function(response) {
                         let post = `
-                    <tr id="${response.data.kode}">
+                    <tr id="${response.data.list_id}">
                         <td>${response.data.kode}</td>
                         <td>${response.data.nama}</td>
                         <td>
-                            <input type="text" name="qty" id="qty" class="form-control" value="${response.data.qty}">
+                            <input type="text" name="qty" id="qty-${response.data.list_id}" class="form-control" value="${response.data.qty}">
                         </td>
                         <td>${response.data.diskon}</td>
-                        <td>${response.data.jumlah}</td>
+                        <td>${response.data.harga}</td>
+                        <td class="subtotal">${response.data.jumlah}</td>
                         <td>
-                            <a href="javascript:void(0);" class="action-icon">
+                            <a href="javascript:void(0);" class="action-icon" onclick="edit('${response.data.list_id}')">
                                 <i class="mdi mdi-square-edit-outline"></i>
                             </a>
-                            <a href="javascript:void(0);" class="action-icon" id="btn-delete-post"
-                            onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?'))
-                            document.getElementById('delete-form-${response.data.kode}').submit();">
-                                <i class="mdi mdi-delete"></i>
-                            </a>
+                            <a href="javascript:void(0)" onclick="hapus('${response.data.list_id}')" class="action-icon"><i class="mdi mdi-delete"></i></a>
                         </td>
                     </tr>
                 `;
                         //append to table
                         $('#barangList').append(post);
                         nourut++;
-                        console.log('berhasil');
+                        console.log('data');
+                        updateGrandTotal();
                     }
                 })
             })
-
-            $('body').on('click', '#btn-delete-post', function(e) {
-                e.preventDefault();
-                let kode = $(this).data('qrcode');
-                let token = $("meta[name='csrf-token']").attr("content");
-                $.ajax({
-                    url: "/admin/transaksi/list/destroy/" + kode,
-                    type: "DELETE",
-                    cache: false,
-                    data: {
-                        "kode-barang": kode,
-                        "_token": token
-                    },
-                    success: function(response) {
-                        console.log('Berhasil hapus data');
-                        //remove post on table
-                        $(`#${response.data.kode}`).remove();
-                    }
-                });
-            })
-
 
             var path2 = "{{ route('transaksi.store') }}";
             $('#simpan').click(function(e) {

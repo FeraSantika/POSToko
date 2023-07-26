@@ -71,7 +71,8 @@ Route::get('/search', [DatabarangkeluarController::class, 'search'])->name('sear
 Route::controller(DatabarangkeluarController::class)->group(function(){
     Route::get('/admin/transaksi', 'index')->name('transaksi');
     Route::post('/admin/transaksi/store', 'store')->name('transaksi.store');
-    Route::delete('/admin/transaksi/list/destroy/{id}', 'destroy')->name('list.destroy');
+    Route::get('/admin/transaksi/list/destroy/{id}', 'destroy')->name('list.destroy');
+    Route::post('/admin/transaksi/list/updatelist', 'updatelist')->name('list.update');
     Route::post('/addlistbarang', 'insertlist')->name('insertlist');
     Route::get('/autocomplete', 'autocomplete')->name('autocomplete');
 });

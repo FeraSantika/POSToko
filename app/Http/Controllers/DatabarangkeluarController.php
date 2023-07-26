@@ -41,7 +41,7 @@ class DatabarangkeluarController extends Controller
     public function autocomplete(Request $request)
     {
         $data = DataBarang::select("nama_barang as value", "kode_barang")
-            ->where('nama_barang', 'LIKE', '%' . $request->get('search') . '%')
+            ->where('nama_barang', 'LIKE', '%' . $request->get('cari') . '%')
             ->get();
 
         return response()->json($data);
@@ -50,24 +50,24 @@ class DatabarangkeluarController extends Controller
     public function insertlist(Request $request)
     {
         $dataBarang = DataBarang::where('nama_barang', $request->search)->first();
-
         if ($dataBarang) {
-            $description_data = array(
-                'kode' => $dataBarang->kode_barang,
-                'nama' => $dataBarang->nama_barang,
-                'qty' => 1,
-                'diskon' => $dataBarang->diskon_barang,
-                'jumlah' => $dataBarang->harga_jual,
-            );
-
             try {
-                $post = List_barang_keluar::create([
+                $listbarangkeluar = List_barang_keluar::create([
                     'kode_barang' => $dataBarang->kode_barang,
                     'kode_transaksi' => $request->kode_transaksi,
                     'jumlah_bk' => 1,
                     'harga_jual' => $dataBarang->harga_jual,
                     'diskon_bk' => $dataBarang->diskon_barang,
                 ]);
+                $description_data = array(
+                    'kode' => $dataBarang->kode_barang,
+                    'nama' => $dataBarang->nama_barang,
+                    'qty' => 1,
+                    'diskon' => $dataBarang->diskon_barang,
+                    'harga' => $dataBarang->harga_jual,
+                    'jumlah' => $dataBarang->harga_jual * 1,
+                    'list_id' => $listbarangkeluar->id,
+                );
                 return response()->json([
                     'success' => true,
                     'message' => 'Data Berhasil Disimpan!',
@@ -136,15 +136,43 @@ class DatabarangkeluarController extends Controller
         // $dataBarang = DataBarang::where('nama_barang', $request->search)->first();
     }
 
-    public function destroy($id)
+    public function updatelist(Request $request)
+    {
+
+        $post = List_barang_keluar::where('list_id', $request->list_id)->update([
+            'jumlah_bk' => $request->qty,
+        ]);
+
+        $post = List_barang_keluar::where('list_id', $request->list_id)->first();
+        $barang = DataBarang::where('kode_barang', $post->kode_barang)->first();
+
+        $description_data = array(
+            'kode' => $post->kode_barang,
+            'nama' => $barang->nama_barang,
+            'qty' => $post->jumlah_bk,
+            'diskon' => $post->diskon_bk,
+            'harga' => $post->harga_jual,
+            'jumlah' => $post->harga_jual * $post->jumlah_bk,
+            'list_id' => $post->list_id,
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Disimpan!',
+            'data' => $description_data
+        ]);
+    }
+
+    public function destroy($list_id)
     {
         //delete post by ID
-        List_barang_keluar::where('kode_barang', $id)->delete();
-
+        $listbarang = List_barang_keluar::where('list_id', $list_id);
+        $listbarang->delete();
         //return response
         return response()->json([
             'success' => true,
             'message' => 'Data Post Berhasil Dihapus!.',
+            'data' => $listbarang,
         ]);
     }
 }
