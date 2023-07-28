@@ -65,11 +65,7 @@
                                             {{$item->harga_jual}}
                                         </td>
                                         <td>
-                                            @if ($item->diskon_barang == 1)
-                                                Ya
-                                            @else
-                                                Tidak
-                                            @endif
+                                            {{$item->diskon_barang}}%
                                         </td>
                                         <td>
                                             {{$item->stok_barang}}

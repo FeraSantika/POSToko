@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -46,11 +47,19 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $this->validate($request, [
-            'username' => 'required',
-            'password' => 'required',
+        $credentials = $request->validate([
+            'User_name' => 'required',
+            'User_password' => 'required',
         ]);
 
-        return redirect()->route('menu')->with('success', 'Menu edited successfully');
+        $credentials['User_name'] = $credentials['User_name'];
+        $credentials['User_password'] = $credentials['User_password'];
+        if (Auth::attempt($credentials)) {
+            return redirect()->route('admin.home');
+        }
+
+        return back()->withErrors([
+            'username' => 'Invalid credentials',
+        ]);
     }
 }

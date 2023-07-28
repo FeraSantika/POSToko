@@ -26,7 +26,7 @@
                                 @csrf
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Username</label>
-                                    <input class="form-control" name="username" type="text" id="username" required=""
+                                    <input class="form-control" name="User_name" type="text" id="username" required=""
                                         placeholder="Enter your username">
                                 </div>
 
@@ -35,7 +35,7 @@
                                             password?</small></a>
                                     <label for="password" class="form-label">Password</label>
                                     <div class="input-group input-group-merge">
-                                        <input type="password" id="password" name="password" class="form-control"
+                                        <input type="password" id="password" name="User_password" class="form-control"
                                             placeholder="Enter your password">
                                         <div class="input-group-text" data-password="false">
                                             <span class="password-eye"></span>

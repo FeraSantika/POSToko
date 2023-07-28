@@ -13,9 +13,9 @@
                                 value="{{ $item->nama_barang }}">
                         </div>
 
-                        <div class="form-group mb-3" id="hidden_div">
-                            <label for="kategori" class="col-md-4 col-form-label text-md-start">Kategori</label>
-                            <div class="col-md-8 {{ $errors->has('kategori') ? 'has-error' : '' }}">
+                        <div class="mb-3" id="hidden_div">
+                            <label for="kategori" class="form-label ">Kategori</label>
+                            <div class="col-md-12 {{ $errors->has('kategori') ? 'has-error' : '' }}">
                                 <select name="kategori" id="kategori" class="form-control">
                                     @foreach ($dtkategori as $kategori)
                                         <option value="{{ $kategori->kode_kategori }}">{{ $kategori->nama_kategori }}</option>
@@ -30,14 +30,9 @@
                                 value="{{ $item->harga_jual }}">
                         </div>
 
-                        <div class="form-group mb-3" id="hidden_div">
-                            <label for="diskon" class="col-md-4 col-form-label text-md-start">Diskon</label>
-                            <div class="col-md-8 {{ $errors->has('diskon') ? 'has-error' : '' }}">
-                                <select name="diskon" id="diskon" class="form-control">
-                                    <option value="1">Ya</option>
-                                    <option value="0">Tidak</option>
-                                </select>
-                            </div>
+                        <div class="mb-3">
+                            <label for="diskon" class="form-label">Diskon</label>
+                            <input type="text" name="diskon" id="diskon" class="form-control" value="{{ $item->diskon_barang }}">
                         </div>
 
                         <div class="mb-3">

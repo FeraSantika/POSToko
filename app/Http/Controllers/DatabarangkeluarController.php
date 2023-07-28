@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DataBarang;
+use Carbon\Carbon;
 use App\Models\DataUser;
-use App\Models\List_barang_keluar;
-use App\Models\Transaksi_barang_keluar;
+use App\Models\DataBarang;
 use Illuminate\Http\Request;
+use App\Models\List_barang_keluar;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Transaksi_barang_keluar;
 use Illuminate\Support\Facades\Validator;
 
 class DatabarangkeluarController extends Controller
@@ -65,7 +67,7 @@ class DatabarangkeluarController extends Controller
                     'qty' => 1,
                     'diskon' => $dataBarang->diskon_barang,
                     'harga' => $dataBarang->harga_jual,
-                    'jumlah' => $dataBarang->harga_jual * 1,
+                    'jumlah' => ($dataBarang->harga_jual * 1) - ($dataBarang->harga_jual * 1 * $dataBarang->diskon_barang / 100),
                     'list_id' => $listbarangkeluar->id,
                 );
                 return response()->json([
@@ -84,6 +86,28 @@ class DatabarangkeluarController extends Controller
 
     public function store(Request $request)
     {
+        // $kasir = DataUser::where('user_id', auth()->user()->id)->first();
+        $kasir = Auth::id();
+        $tanggal = Carbon::createFromFormat('Y-m-d', $request->tanggal);
+        $transaksi_bk = Transaksi_barang_keluar::create([
+            "kode_transaksi" => $request->kode_transaksi,
+            "kode_kasir" => $kasir,
+            "tanggal_tbk" => $tanggal,
+            "customer" => $request->customer,
+            "diskon_tbk" => $request->diskon,
+            "total_bayar" => $request->total_bayar,
+            "dibayar" => $request->jumlah_uang,
+            "kembalian" => $request->kembali
+        ]);
+
+
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Disimpan!',
+            'data' => $kasir
+        ]);
+
         // $lastTransaction = Transaksi_barang_keluar::orderBy('kode_transaksi', 'desc')->first();
         // if ($lastTransaction) {
         //     $lastId = (int) substr($lastTransaction->kode_transaksi, strlen($prefix));
@@ -152,7 +176,7 @@ class DatabarangkeluarController extends Controller
             'qty' => $post->jumlah_bk,
             'diskon' => $post->diskon_bk,
             'harga' => $post->harga_jual,
-            'jumlah' => $post->harga_jual * $post->jumlah_bk,
+            'jumlah' => ($post->harga_jual * $post->jumlah_bk) - ($post->harga_jual * $post->jumlah_bk * $post->diskon_bk / 100),
             'list_id' => $post->list_id,
         );
 
@@ -165,10 +189,9 @@ class DatabarangkeluarController extends Controller
 
     public function destroy($list_id)
     {
-        //delete post by ID
         $listbarang = List_barang_keluar::where('list_id', $list_id);
         $listbarang->delete();
-        //return response
+
         return response()->json([
             'success' => true,
             'message' => 'Data Post Berhasil Dihapus!.',

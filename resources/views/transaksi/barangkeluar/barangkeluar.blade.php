@@ -78,15 +78,16 @@
                                     </thead>
                                     <tbody id="barangList">
                                         @foreach ($listbarang as $item)
-                                            <tr id="{{ $item->list_id }}">
+                                            <tr id="list_id{{ $item->list_id }}">
                                                 <td>{{ $item->kode_barang }}</td>
                                                 <td>{{ $item->barang->nama_barang }}</td>
                                                 <td><input type="text" name="qty" id="qty-{{ $item->list_id }}"
                                                         class="form-control" value="{{ $item->jumlah_bk }}"></td>
-                                                <td>{{ $item->diskon_bk }}</td>
-                                                <td>{{ $item->harga_jual }}</td>
+                                                <td>{{ $item->diskon_bk }}%</td>
+                                                <td>{{ number_format($item->harga_jual, 0, ',', '.') }}</td>
                                                 <td class="subtotal" id="total-{{ $item->list_id }}">
-                                                    {{ $item->harga_jual * $item->jumlah_bk }}</td>
+                                                    {{ number_format($item->harga_jual * $item->jumlah_bk - ($item->harga_jual * $item->jumlah_bk * $item->diskon_bk) / 100, 0, ',', '.') }}
+                                                </td>
                                                 <td>
                                                     <a href="javascript:void(0);" class="action-icon"
                                                         onclick="edit('{{ $item->list_id }}');">
@@ -107,7 +108,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div class="row mb-3 m-3">
+                                <div class="row mb-3 mt-2 m-3">
                                     <div class="col-md-2">
                                         <label for="diskon" class="form-label-md-6">Diskon</label>
                                     </div>
@@ -153,15 +154,55 @@
 @endsection
 @section('script')
     <script type="text/javascript">
+        function formatNumber(number) {
+            return number.toLocaleString('id-ID');
+        }
+
         function updateGrandTotal() {
             let grandTotal = 0;
             $(".subtotal").each(function() {
-                grandTotal += parseFloat($(this).text());
+                const subtotal = $(this).text().replace('.', '')
+                grandTotal += parseFloat(subtotal);
             });
-            $("#grandTotal").text(grandTotal.toLocaleString().replace(/,/g, '.'));
+            const formattedGrandTotal = formatNumber(grandTotal);
+            $("#grandTotal").text(formattedGrandTotal.replace(/,/g, '.'));
+            $("#totalbayar").val("Rp " + formattedGrandTotal + ",-");
         }
 
         updateGrandTotal();
+
+        function updateTotalbayar() {
+            var totalBayar = 0;
+            var currentDiskon = $('#diskon').val();
+            $("#grandTotal").each(function() {
+                const grandTotal = $(this).text().replace('.', '');
+                totalBayar += parseFloat(grandTotal);
+            });
+            totalBayar = totalBayar - (totalBayar * (parseFloat(currentDiskon) /
+                100));
+            const formattedTotalbayar = formatNumber(totalBayar);
+            $('#totalbayar').val("Rp " + formattedTotalbayar + ",-");
+        }
+
+        $('#diskon').on('input', function() {
+            updateGrandTotal();
+            updateTotalbayar();
+        });
+
+        function updateKembalian() {
+            var kembalian = 0;
+            var currentDibayar = $('#dibayar').val();
+            var totalbayar = $('#totalbayar').val();
+            totalbayar = totalbayar.replace('Rp', '').replace('.', '').replace(',- ', '');
+
+            kembalian = parseFloat(currentDibayar) - parseFloat(totalbayar);
+            const formattedkembalian = formatNumber(kembalian);
+            $('#kembalian').val("Rp " + formattedkembalian + ",-");
+        }
+
+        $('#dibayar').on('input', function() {
+            updateKembalian();
+        });
 
         function hapus(list_id) {
             var url = "{{ route('list.destroy', ':list_id') }}";
@@ -190,7 +231,8 @@
                                 timer: 1500
                             });
                             console.log("berhasil hapus data");
-                            $("#" + list_id).remove();
+                            $("#list_id" + list_id).remove();
+
                             updateGrandTotal();
                         }
                     })
@@ -223,15 +265,16 @@
                         timer: 1500
                     });
                     let newRow = `
-                        <tr id="${response.data.list_id}">
+                        <tr id="list_id${response.data.list_id}">
                             <td>${response.data.kode}</td>
                             <td>${response.data.nama}</td>
                             <td>
                                 <input type="text" name="qty" id="qty-${response.data.list_id}" class="form-control" value="${response.data.qty}">
                             </td>
-                            <td>${response.data.diskon}</td>
-                            <td>${response.data.harga}</td>
-                            <td class="subtotal">${response.data.jumlah}</td>
+                            <td>${response.data.diskon}%</td>
+
+                            <td id="harga">${formatNumber(response.data.harga)}</td>
+                            <td class="subtotal" id="jumlah">${formatNumber(response.data.jumlah)}</td>
                             <td>
                                 <a href="javascript:void(0);" class="action-icon" onclick="edit('${response.data.list_id}')">
                                     <i class="mdi mdi-square-edit-outline"></i>
@@ -240,7 +283,8 @@
                             </td>
                         </tr>
                     `;
-                    $(`#${response.data.list_id}`).replaceWith(newRow);
+                    $(`#list_id${response.data.list_id}`).replaceWith(newRow);
+
                     updateGrandTotal();
                     console.log(response.data);
                 }
@@ -249,7 +293,6 @@
 
         $(document).ready(function() {
             var path = "{{ route('autocomplete') }}";
-            var nourut = 1;
             $("#search").autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -271,43 +314,44 @@
                     return false;
                 }
             });
+        })
 
-            var insertlist = "{{ route('insertlist') }}";
-            $('#add').click(function(e) {
-                e.preventDefault();
-                let kodetransaksi = $('#notransaksi').val();
-                let qrcode = $('#qrcode').val();
-                let search = $('#search').val();
-                let token = $("meta[name='csrf-token']").attr("content");
+        var insertlist = "{{ route('insertlist') }}";
+        $('#add').click(function(e) {
+            e.preventDefault();
+            let kodetransaksi = $('#notransaksi').val();
+            let qrcode = $('#qrcode').val();
+            let search = $('#search').val();
+            let token = $("meta[name='csrf-token']").attr("content");
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
 
-                $.ajax({
-                    url: insertlist,
-                    type: "POST",
-                    cache: false,
-                    data: {
-                        "kode_transaksi": kodetransaksi,
-                        "kode_barang": qrcode,
-                        "search": search,
-                        "_token": token
-                    },
+            $.ajax({
+                url: insertlist,
+                type: "POST",
+                cache: false,
+                data: {
+                    "kode_transaksi": kodetransaksi,
+                    "kode_barang": qrcode,
+                    "search": search,
+                    "_token": token
+                },
 
-                    success: function(response) {
-                        let post = `
-                    <tr id="${response.data.list_id}">
+                success: function(response) {
+                    let post = `
+                    <tr id="list_id${response.data.list_id}">
                         <td>${response.data.kode}</td>
                         <td>${response.data.nama}</td>
                         <td>
                             <input type="text" name="qty" id="qty-${response.data.list_id}" class="form-control" value="${response.data.qty}">
                         </td>
-                        <td>${response.data.diskon}</td>
-                        <td>${response.data.harga}</td>
-                        <td class="subtotal">${response.data.jumlah}</td>
+                        <td>${response.data.diskon}%</td>
+                        <td id="harga">${formatNumber(response.data.harga)}</td>
+                        <td class="subtotal" id="jumlah">${formatNumber(response.data.jumlah)}</td>
                         <td>
                             <a href="javascript:void(0);" class="action-icon" onclick="edit('${response.data.list_id}')">
                                 <i class="mdi mdi-square-edit-outline"></i>
@@ -316,18 +360,67 @@
                         </td>
                     </tr>
                 `;
-                        //append to table
-                        $('#barangList').append(post);
-                        nourut++;
-                        console.log('data');
-                        updateGrandTotal();
-                    }
-                })
+                    //append to table
+                    $('#barangList').append(post);
+                    console.log('data');
+                    updateGrandTotal();
+                }
             })
+        })
 
-            var path2 = "{{ route('transaksi.store') }}";
-            $('#simpan').click(function(e) {
-                e.preventDefault();
+        var simpan = "{{ route('transaksi.store') }}";
+        $('#simpan').click(function(e) {
+            e.preventDefault();
+            let kodetransaksi = $('#notransaksi').val();
+            let tanggal = $('#tanggal').val();
+            let customer = $('#customer').val();
+            let diskon = $('#diskon').val();
+            let totalbayar = $('#totalbayar').val();
+            totalbayar = totalbayar.replace('Rp', '').replace('.', '').replace(',- ', '');
+            let dibayar = $('#dibayar').val();
+            let kembalian = $('#kembalian').val();
+            kembalian = kembalian.replace('Rp', '').replace('.', '').replace(',- ', '');
+            let token = $("meta[name='csrf-token']").attr("content");
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: simpan,
+                type: "POST",
+                cache: false,
+                data: {
+                    "kode_transaksi": kodetransaksi,
+                    "tanggal": tanggal,
+                    "customer": customer,
+                    "diskon": diskon,
+                    "total_bayar": parseFloat(totalbayar),
+                    "jumlah_uang": dibayar,
+                    "kembali": parseFloat(kembalian),
+                    "_token": token
+                },
+
+
+                success: function(response) {
+                    swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Data berhasil disimpan.',
+                        timer: 1500,
+                        showConfirmButton: true,
+                    });
+                    console.log(response.data);
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+
+
+
+
                 // var daftarData = []
                 // var daftarBaris = $('#barangList').children("tr");
                 // daftarBaris.each((index, element) => {
