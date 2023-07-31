@@ -21,17 +21,13 @@ class DatabarangkeluarController extends Controller
         $lastTransaction = Transaksi_barang_keluar::orderBy('kode_transaksi', 'desc')->first();
 
         if ($lastTransaction) {
-            // Extract the numeric part from the existing kode_transaksi (i.e., the part without the prefix) and convert it to an integer.
             $lastId = (int) substr($lastTransaction->kode_transaksi, strlen($prefix));
         } else {
-            // Jika tidak ada transaksi sebelumnya, set $lastId ke 0.
             $lastId = 0;
         }
 
-        // Padding nomor urutan dengan nol di depan
         $nextId = $lastId + 1;
 
-        // Kombinasikan huruf dan nomor urutan
         $paddedId = str_pad($nextId, $length, '0', STR_PAD_LEFT);
         $transactionCode = $prefix . $paddedId;
 
@@ -86,8 +82,7 @@ class DatabarangkeluarController extends Controller
 
     public function store(Request $request)
     {
-        // $kasir = DataUser::where('user_id', auth()->user()->id)->first();
-        $kasir = Auth::id();
+        $kasir = Auth::user()->User_id;
         $tanggal = Carbon::createFromFormat('Y-m-d', $request->tanggal);
         $transaksi_bk = Transaksi_barang_keluar::create([
             "kode_transaksi" => $request->kode_transaksi,
@@ -100,69 +95,30 @@ class DatabarangkeluarController extends Controller
             "kembalian" => $request->kembali
         ]);
 
+        $prefix = 'TK';
+        $length = 4;
+        $lastTransaction = Transaksi_barang_keluar::orderBy('kode_transaksi', 'desc')->first();
+        if ($lastTransaction) {
+            $lastId = (int) substr($lastTransaction->kode_transaksi, strlen($prefix));
+        } else {
+            $lastId = 0;
+        }
+        $nextId = $lastId + 1;
+        $paddedId = str_pad($nextId, $length, '0', STR_PAD_LEFT);
+        $newTransactionCode = $prefix . $paddedId;
 
+        List_barang_keluar::where('kode_transaksi', $request->kode_transaksi)->delete();
 
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Disimpan!',
-            'data' => $kasir
+            'data' => $transaksi_bk,
+            'new_kode_transaksi' => $newTransactionCode
         ]);
-
-        // $lastTransaction = Transaksi_barang_keluar::orderBy('kode_transaksi', 'desc')->first();
-        // if ($lastTransaction) {
-        //     $lastId = (int) substr($lastTransaction->kode_transaksi, strlen($prefix));
-        // } else {
-        //     $lastId = 0;
-        // }
-        // // Padding nomor urutan dengan nol di depan
-        // $nextId = $lastId + 1;
-        // // Kombinasikan huruf dan nomor urutan
-        // $paddedId = str_pad($nextId, $length, '0', STR_PAD_LEFT);
-        // $transactionCode = $prefix . $paddedId;
-
-        // $kasir = DataUser::where('user_id', auth()->user()->id)->first();
-
-        // $validator = Validator::make($request->all(), [
-        //     'kode_transaksi' => 'required',
-        //     'kode_kasir' => 'required',
-        //     'customer' => 'required|string',
-        //     'tanggal_tbk' => 'required',
-        //     'diskon_tbk' => 'required',
-        //     'total_bayar' => 'required',
-        //     'dibayar' => 'required',
-        //     'kembalian' => 'required',
-        // ]);
-        //check if validation fails
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors(), 422);
-        // }
-
-        // if ($kasir) {
-        //     $post = Transaksi_barang_keluar::create([
-        //         'kode_transaksi' => $transactionCode,
-        //         'kode_kasir' => $kasir->user_id,
-        //         'customer' => $request->customer,
-        //         'tanggal_tbk' => $request->tanggal,
-        //         'diskon_tbk' => $request->diskon,
-        //         'total_bayar' => $request->totalbayar,
-        //         'dibayar' => $request->dibayar,
-        //         'kembalian' => $request->kembalian,
-        //     ]);
-
-        // $databarang = List_barang_keluar::create([
-        //     'kode_barang',
-        //     'kode_transaksi',
-        //     'jumlah_bk',
-        //     'harga_jual',
-        //     'diskon_bk'
-        // ]);
-        // }
-        // $dataBarang = DataBarang::where('nama_barang', $request->search)->first();
     }
 
     public function updatelist(Request $request)
     {
-
         $post = List_barang_keluar::where('list_id', $request->list_id)->update([
             'jumlah_bk' => $request->qty,
         ]);

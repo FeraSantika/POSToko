@@ -81,8 +81,8 @@
                                             class="col-md-4 col-form-label text-md-start">Gender</label>
                                         <div class="col-md-8 {{ $errors->has('gender') ? 'has-error' : '' }}">
                                             <select name="gender" id="gender" class="form-control">
-                                                <option value="laki-laki">Laki - laki</option>
-                                                <option value="Perempuan">Perempuan</option>
+                                                <option value="Male">Laki - laki</option>
+                                                <option value="Female">Perempuan</option>
                                             </select>
                                         </div>
                                     </div>

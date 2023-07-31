@@ -362,6 +362,7 @@
                 `;
                     //append to table
                     $('#barangList').append(post);
+                    $('#search').val('');
                     console.log('data');
                     updateGrandTotal();
                 }
@@ -402,9 +403,16 @@
                     "kembali": parseFloat(kembalian),
                     "_token": token
                 },
-
-
                 success: function(response) {
+                    let newNotransaksi = response.new_kode_transaksi;
+                    $('#notransaksi').val(newNotransaksi);
+                    $('#tanggal').val('');
+                    $('#customer').val('');
+                    $('#diskon').val('');
+                    $('#totalbayar').val('');
+                    $('#dibayar').val('');
+                    $('#kembalian').val('');
+
                     swal.fire({
                         icon: 'success',
                         title: 'Berhasil!',
@@ -412,73 +420,12 @@
                         timer: 1500,
                         showConfirmButton: true,
                     });
+                    $('#barangList').remove();
                     console.log(response.data);
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr.responseText);
                 }
-
-
-
-
-                // var daftarData = []
-                // var daftarBaris = $('#barangList').children("tr");
-                // daftarBaris.each((index, element) => {
-                // var daftarTD = $(element).children("td");
-                // var qty = daftarTD.get(3).children[0].value
-                // var kodebarang = daftarTD.get(1).innerText
-                // var data = {
-                //     "qty": qty,
-                //     "kode_barang": kodebarang,
-                // }
-                //     daftarData.push(data);
-                // })
-
-                // let customer = $('#customer').val();
-                // let notransaksi = $('#notransaksi').val();
-                // let tanggal = $('#tanggal').val();
-                // let diskon = $('#diskon').val();
-                // let totalbayar = $('#totalbayar').val();
-                // let dibayar = $('#dibayar').val();
-                // let kembalian = $('#kembalian').val();
-                // let token = $("meta[name='csrf-token']").attr("content");
-
-                // let datadikirim = {
-                //     "kode_transaksi": notransaksi,
-                //     "customer": customer,
-                //     "tanggal_tbk": tanggal,
-                //     "diskon_tbk": diskon,
-                //     "total_bayar": totalbayar,
-                //     "dibayar": dibayar,
-                //     "kembalian": kembalian,
-                //     "daftar_barang": daftarData,
-                // "_token": token
-                // };
-
-                // console.log(datadikirim);
-
-                // {
-                //     "kode_transaksi": no.transaksi,
-                //     "customer": customer,
-                //     "tanggal_tbk": tanggal,
-                //     "diskon_tbk": diskon,
-                //     "total_bayar": totalbayar,
-                //     "dibayar": dibayar,
-                //     "kembalian": kembalian,
-                //     "_token": token
-                // },
-
-                // success: function(response) {
-                //     console.log('berhasil');
-                // $('#customer').val('');
-                // $('#notransaksi').val('');
-                // $('#tanggal').val('');
-                // $('#qrcode').val('');
-                // $('#diskon').val('');
-                // $('#totalbayar').val('');
-                // $('#dibayar').val('');
-                // $('#kembalian').val('');
-                // }
             })
         })
     </script>

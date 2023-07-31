@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\WelcomeMail;
+use App\Models\DataUser;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Verifytoken;
@@ -71,12 +72,12 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
 
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'gender' => $data['gender'],
-            'tgl_lahir' => $data['tgl_lahir'],
-            'password' => Hash::make($data['password']),
+        $user = DataUser::create([
+            'User_name' => $data['name'],
+            'User_email' => $data['email'],
+            'User_gender' => $data['gender'],
+            'Role_id' => 3,
+            'User_password' => Hash::make($data['password']),
         ]);
 
         // $validToken = rand(10, 100.. '2022');

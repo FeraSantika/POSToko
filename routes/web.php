@@ -69,7 +69,7 @@ Route::post('/admin/kategori/update/{id}', [KategoriController::class, 'update']
 Route::delete('/admin/kategori/destroy/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 Route::get('/search', [DatabarangkeluarController::class, 'search'])->name('search');
 Route::controller(DatabarangkeluarController::class)->group(function(){
-    Route::get('/admin/transaksi', 'index')->name('transaksi');
+    Route::get('/admin/transaksi_bk', 'index')->name('transaksi.bk');
     Route::post('/admin/transaksi/store', 'store')->name('transaksi.store');
     Route::get('/admin/transaksi/list/destroy/{id}', 'destroy')->name('list.destroy');
     Route::post('/admin/transaksi/list/updatelist', 'updatelist')->name('list.update');

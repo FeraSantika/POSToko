@@ -391,8 +391,8 @@
                             class="rounded-circle">
                     </span>
                     <span class="d-lg-flex flex-column gap-1 d-none">
-                        {{-- <h5 class="my-0">{{ Auth::user()->User_name }}</h5> --}}
-                        <h6 class="my-0 fw-normal">Founder</h6>
+                        <h4 class="my-0">{{ Auth::user()->User_name }}</h4>
+                        {{-- <h6 class="my-0 fw-normal">Founder</h6> --}}
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">

@@ -53,7 +53,7 @@ class LoginController extends Controller
         ]);
 
         $credentials['User_name'] = $credentials['User_name'];
-        $credentials['User_password'] = $credentials['User_password'];
+        $credentials['password'] = $credentials['User_password'];
         if (Auth::attempt($credentials)) {
             return redirect()->route('admin.home');
         }

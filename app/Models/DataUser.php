@@ -21,8 +21,17 @@ class DataUser extends Authenticatable
         'User_token',
     ];
 
-    protected $User_name = 'User_name';
-    protected $User_password = 'User_password';
+    public function getAuthPassword(){
+        return $this->User_password;
+    }
+
+    public function getAuthIdentifierName(){
+        return "User_name";
+    }
+
+    public function getAuthIdentifier(){
+        return $this->User_name;
+    }
 
     public function role(){
         return $this->belongsTo(DataRole::class, 'Role_id', 'Role_id');

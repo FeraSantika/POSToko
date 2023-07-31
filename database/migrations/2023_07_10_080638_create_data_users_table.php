@@ -17,9 +17,9 @@ return new class extends Migration
             $table->char('User_email');
             $table->char('User_password');
             $table->enum('User_gender', ['Male', 'Female']);
-            $table->char('User_photo');
+            $table->char('User_photo')->nullable();
             $table->bigInteger('Role_id');
-            $table->char('User_token');
+            $table->char('User_token')->nullable();
             $table->timestamps();
         });
     }

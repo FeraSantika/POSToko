@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('kode_barang');
             $table->integer('jumlah_bk');
             $table->integer('harga_jual');
-            $table->integer('diskon_bk');
+            $table->integer('diskon_bk')->nullable();
             $table->timestamps();
         });
     }
