@@ -63,6 +63,10 @@
                             <a class="nav-link {{ Route::current()->getName() == 'user' ? 'active' : '' }}"
                                 href="{{ route('user') }}">User</a>
                         </li>
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'supplier' ? 'active' : '' }}"
+                                href="{{ route('supplier') }}">Supplier</a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -102,7 +106,7 @@
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#sidebarTransaksi" aria-expanded="false"
                     aria-controls="sidebarDashboards" class="side-nav-link">
-                    <i class=" uil-shopping-cart-alt"></i>
+                    <i class="uil-shopping-trolley"></i>
                     <span> Transaksi </span>
                 </a>
                 <div class="collapse" id="sidebarTransaksi">
@@ -111,13 +115,14 @@
                             <a class="nav-link {{ Route::current()->getName() == 'transaksi.bk' ? 'active' : '' }}"
                                 href="{{ route('transaksi.bk') }}">Transaksi Barang Keluar</a>
                         </li>
-                        {{-- <li>
-                            <a class="nav-link {{ Route::current()->getName() == '' ? 'active' : '' }}""
-                                href="">Transaksi Barang Masuk</a>
-                        </li> --}}
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'transaksi.bm' ? 'active' : '' }}""
+                                href="{{route('transaksi.bm')}}">Transaksi Barang Masuk</a>
+                        </li>
                     </ul>
                 </div>
             </li>
+
             <!-- Help Box -->
             <div class="help-box text-white text-center">
                 <a href="javascript: void(0);" class="float-end close-btn text-white">

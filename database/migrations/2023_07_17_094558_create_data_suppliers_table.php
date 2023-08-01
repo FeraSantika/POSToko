@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('kode_supplier');
             $table->string('nama_supplier');
             $table->char('alamat_supplier');
-            $table->integer('telp_supplier');
+            $table->char('telp_supplier', 25);
             $table->timestamps();
         });
     }

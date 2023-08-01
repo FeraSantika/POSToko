@@ -17,4 +17,9 @@ class List_barang_masuk extends Model
         'harga_beli',
         'jumlah_bm'
     ];
+
+    public function barang()
+    {
+        return $this->belongsTo(DataBarang::class, 'kode_barang', 'kode_barang');
+    }
 }

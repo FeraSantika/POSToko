@@ -23,7 +23,7 @@ class UserController extends Controller
         return view('user.create', compact('dtRole'));
     }
 
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -62,7 +62,7 @@ class UserController extends Controller
     public function edit($User_id)
     {
         $dtRole = DataRole::get();
-        $dtUser = DataUser::where('User_id', $User_id)->with('role')->get();
+        $dtUser = DataUser::where('User_id', $User_id)->with('role')->first();
         return view('user.edit', compact('dtUser', 'dtRole'));
     }
 

@@ -33,7 +33,7 @@ class DatabarangkeluarController extends Controller
 
         $listbarang = List_barang_keluar::with('barang')->get();
 
-        return view('transaksi.barangkeluar.barangkeluar', compact('transactionCode', 'lastTransaction', 'dtbarang', 'listbarang'));
+        return view('transaksi.barangkeluar', compact('transactionCode', 'lastTransaction', 'dtbarang', 'listbarang'));
     }
 
     public function autocomplete(Request $request)
@@ -106,8 +106,6 @@ class DatabarangkeluarController extends Controller
         $nextId = $lastId + 1;
         $paddedId = str_pad($nextId, $length, '0', STR_PAD_LEFT);
         $newTransactionCode = $prefix . $paddedId;
-
-        List_barang_keluar::where('kode_transaksi', $request->kode_transaksi)->delete();
 
         return response()->json([
             'success' => true,
