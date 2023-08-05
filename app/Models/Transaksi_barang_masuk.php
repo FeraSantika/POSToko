@@ -12,6 +12,15 @@ class Transaksi_barang_masuk extends Model
     protected $fillable = [
         'kode_transaksi',
         'tanggal_tbm',
-        'kode_supplier'
+        'kode_supplier',
+        'harga_total'
     ];
+
+    public function supplier(){
+        return $this->belongsTo(DataSupplier::class, 'kode_supplier', 'kode_supplier');
+    }
+
+    public function list(){
+        return $this->hasMany(List_barang_masuk::class, 'kode_transaksi', 'kode_transaksi')->with('barang');
+    }
 }

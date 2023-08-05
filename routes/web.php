@@ -15,6 +15,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DatabarangmasukController;
 use App\Http\Controllers\DatabarangkeluarController;
+use App\Http\Controllers\LaporanbarangmasukController;
+use App\Http\Controllers\LaporanbarangkeluarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,22 +85,40 @@ Route::post('/admin/kategori/update/{id}', [KategoriController::class, 'update']
 Route::delete('/admin/kategori/destroy/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
 Route::get('/search', [DatabarangkeluarController::class, 'search'])->name('search');
+
 Route::controller(DatabarangkeluarController::class)->group(function(){
     Route::get('/admin/transaksi_bk', 'index')->name('transaksi.bk');
+    Route::get('admin/transaksi_bk/create', 'create')->name('transaksibk.create');
     Route::post('/admin/transaksi_bk/store', 'store')->name('transaksi.store');
     Route::get('/admin/transaksi_bk/list/destroy/{id}', 'destroy')->name('list_bk.destroy');
     Route::post('/admin/transaksi_bk/list/updatelist', 'updatelist')->name('list_bk.update');
     Route::post('/addlistbarang_bk', 'insertlist')->name('insertlist_bk');
     Route::get('/autocomplete_bk', 'autocomplete')->name('autocomplete_bk');
+    Route::get('/cetak-resi/{bk_id}', 'cetakResi')->name('cetak.resi');
+    Route::get('/admin/transaksi_bk/detail_bk/{id}', 'detail')->name('detail_bk');
 });
 
 Route::controller(DatabarangmasukController::class)->group(function(){
     Route::get('admin/transaksi_bm', 'index')->name('transaksi.bm');
+    Route::get('admin/transaksi_bm/create', 'create')->name('transaksibm.create');
     Route::post('/admin/transaksi_bm/store', 'store')->name('transaksibm.store');
     Route::get('/autocomplete_bm', 'autocomplete')->name('autocomplete_bm');
     Route::post('/addlistbarang_bm', 'insertlist')->name('insertlist_bm');
     Route::post('/admin/transaksi_bm/list/updatelist', 'updatelist')->name('list_bm.update');
     Route::get('/admin/transaksi_bm/list/destroy/{id}', 'destroy')->name('list_bm.destroy');
+    Route::get('/admin/transaksi_bm/detail_bm/{id}', 'detail')->name('detail_bm');
+});
+
+Route::controller(LaporanbarangmasukController::class)->group(function(){
+    Route::get('admin/laporan_bm', 'index')->name('laporan.bm');
+    Route::get('admin/laporan_bm/get_data', 'getDataByDate')->name('laporan_bm.get_data');
+    Route::get('/export_laporanbm', 'export')->name('export_laporanbm');
+});
+
+Route::controller(LaporanbarangkeluarController::class)->group(function(){
+    Route::get('admin/laporan_bk', 'index')->name('laporan.bk');
+    Route::get('admin/laporan_bk/get_data', 'getDataByDate')->name('laporan_bk.get_data');
+    Route::get('/export_laporanbk', 'export')->name('export_laporanbk');
 });
 
 

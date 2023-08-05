@@ -37,4 +37,8 @@ class DataUser extends Authenticatable
         return $this->belongsTo(DataRole::class, 'Role_id', 'Role_id');
     }
 
+    public function transaksibarangkeluar(){
+        return $this->hasMany(Transaksi_barang_keluar::class, 'kode_kasir', 'User_id');
+    }
+
 }

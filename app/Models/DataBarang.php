@@ -25,4 +25,8 @@ class DataBarang extends Model
     public function listbarangkeluar(){
         return $this->hasMany(List_barang_keluar::class, 'kode_barang', 'kode_barang');
     }
+
+    public function listbarangmasuk(){
+        return $this->hasMany(List_barang_masuk::class, 'kode_barang', 'kode_barang');
+    }
 }

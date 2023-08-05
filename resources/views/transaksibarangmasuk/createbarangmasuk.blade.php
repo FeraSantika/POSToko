@@ -11,10 +11,10 @@
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Transaksi</a></li>
-                                <li class="breadcrumb-item active">Data Barang Keluar</li>
+                                <li class="breadcrumb-item active">Data Barang Masuk</li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Data Barang Keluar</h4>
+                        <h4 class="page-title">Data Barang Masuk</h4>
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                 <div class="col-12">
 
                     <div class="card">
-                        <form action="{{ route('transaksi.store') }}" method="POST" id="form_transaksi">
+                        <form action="" method="POST" id="form_transaksi">
                             <div class="card-body">
                                 <div class="row mb-2">
                                     <div class="row mb-3">
@@ -33,10 +33,18 @@
                                                 placeholder="Nomor Transaksi" value="{{ $transactionCode }}">
                                         </div>
                                         <div class="col-md-4 mb-3">
-                                            <label for="customer" class="form-label">Nama Customer</label>
-                                            <input type="text" id="customer" name="customer" class="form-control"
-                                                placeholder="Nama Customer">
+                                            <label for="supplier" class="form-label">Nama Supplier</label>
+                                            <div class="col-md-10">
+                                                <select name="supplier" id="supplier" class="form-select mb-3">
+                                                    <option selected>Nama Supplier ...</option>
+                                                    @foreach ($dtsupplier as $item)
+                                                        <option value="{{ $item->kode_supplier }}">
+                                                            {{ $item->nama_supplier }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
+                                        <input type="hidden" id="grandTotalInput" name="grand_total" value="">
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-4 mb-3">
@@ -70,36 +78,13 @@
                                             <th>Kode</th>
                                             <th>Barang</th>
                                             <th>Qty</th>
-                                            <th>Diskon</th>
-                                            <th>Harga</th>
+                                            <th>Harga Jual</th>
+                                            <th>Harga Beli</th>
                                             <th>Total</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="barangList">
-                                        {{-- @foreach ($listbarang as $item)
-                                            <tr id="list_id{{ $item->list_id }}">
-                                                <td>{{ $item->kode_barang }}</td>
-                                                <td>{{ $item->barang->nama_barang }}</td>
-                                                <td><input type="text" name="qty" id="qty-{{ $item->list_id }}"
-                                                        class="form-control" value="{{ $item->jumlah_bk }}"></td>
-                                                <td>{{ $item->diskon_bk }}%</td>
-                                                <td>{{ number_format($item->harga_jual, 0, ',', '.') }}</td>
-                                                <td class="subtotal" id="total-{{ $item->list_id }}">
-                                                    {{ number_format($item->harga_jual * $item->jumlah_bk - ($item->harga_jual * $item->jumlah_bk * $item->diskon_bk) / 100, 0, ',', '.') }}
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="action-icon"
-                                                        onclick="edit('{{ $item->list_id }}');">
-                                                        <i class="mdi mdi-square-edit-outline"></i>
-                                                    </a>
-                                                    <a href="javascript:void(0);" class="action-icon"
-                                                        onclick="hapus('{{ $item->list_id }}');">
-                                                        <i class="mdi mdi-delete"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach --}}
                                     </tbody>
                                     <tbody>
                                         <tr>
@@ -108,7 +93,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div class="row mb-3 mt-2 m-3">
+                                {{-- <div class="row mb-3 mt-2 m-3">
                                     <div class="col-md-2">
                                         <label for="diskon" class="form-label-md-6">Diskon</label>
                                     </div>
@@ -139,7 +124,7 @@
                                     <div class="col-md-4">
                                         <input type="text" name="kembalian" id="kembalian" class="form-control">
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="mt-5 mb-5 text-center">
                                     <button class="btn btn-primary" type="submit" id="simpan">Simpan</button>
                                 </div>
@@ -155,6 +140,9 @@
 @section('script')
     <script type="text/javascript">
         function formatNumber(number) {
+            if (number === undefined) {
+                return "Invalid Number";
+            }
             return number.toLocaleString('id-ID');
         }
 
@@ -167,132 +155,14 @@
             const formattedGrandTotal = formatNumber(grandTotal);
             $("#grandTotal").text(formattedGrandTotal.replace(/,/g, '.'));
             $("#totalbayar").val("Rp " + formattedGrandTotal + ",-");
+
+            $("#grandTotalInput").val(grandTotal);
         }
 
         updateGrandTotal();
 
-        function updateTotalbayar() {
-            var totalBayar = 0;
-            var currentDiskon = $('#diskon').val();
-            $("#grandTotal").each(function() {
-                const grandTotal = $(this).text().replace('.', '');
-                totalBayar += parseFloat(grandTotal);
-            });
-            totalBayar = totalBayar - (totalBayar * (parseFloat(currentDiskon) /
-                100));
-            const formattedTotalbayar = formatNumber(totalBayar);
-            $('#totalbayar').val("Rp " + formattedTotalbayar + ",-");
-        }
-
-        $('#diskon').on('input', function() {
-            updateGrandTotal();
-            updateTotalbayar();
-        });
-
-        function updateKembalian() {
-            var kembalian = 0;
-            var currentDibayar = $('#dibayar').val();
-            var totalbayar = $('#totalbayar').val();
-            totalbayar = totalbayar.replace('Rp', '').replace('.', '').replace(',- ', '');
-
-            kembalian = parseFloat(currentDibayar) - parseFloat(totalbayar);
-            const formattedkembalian = formatNumber(kembalian);
-            $('#kembalian').val("Rp " + formattedkembalian + ",-");
-        }
-
-        $('#dibayar').on('input', function() {
-            updateKembalian();
-        });
-
-        function hapus(list_id) {
-            var url = "{{ route('list_bk.destroy', ':list_id') }}";
-            url = url.replace(':list_id', list_id);
-            Swal.fire({
-                title: "Yakin ingin menghapus data ini?",
-                text: "Ketika data terhapus, anda tidak bisa mengembalikan data tersbut!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya, Hapus!"
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        url: url,
-                        type: "get",
-                        dataType: "JSON",
-                        success: function(data) {
-                            Swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                icon: 'success',
-                                title: 'Data berhasil dihapus',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            console.log("berhasil hapus data");
-                            $("#list_id" + list_id).remove();
-
-                            updateGrandTotal();
-                        }
-                    })
-                }
-            })
-        }
-
-        function edit(list_id) {
-            var url = "{{ route('list_bk.update') }}";
-            var currentQty = $('#qty-' + list_id).val();
-            var currentJumlah = $('#total-' + list_id).val();
-            var newData = {
-                'list_id': list_id,
-                'qty': currentQty,
-                'jumlah': currentJumlah,
-                '_token': $("meta[name='csrf-token']").attr("content")
-            }
-            $.ajax({
-                url: url,
-                type: "post",
-                dataType: "JSON",
-                data: newData,
-                success: function(response) {
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Data berhasil diubah',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    let newRow = `
-                        <tr id="list_id${response.data.list_id}">
-                            <td>${response.data.kode}</td>
-                            <td>${response.data.nama}</td>
-                            <td>
-                                <input type="text" name="qty" id="qty-${response.data.list_id}" class="form-control" value="${response.data.qty}">
-                            </td>
-                            <td>${response.data.diskon}%</td>
-
-                            <td id="harga">${formatNumber(response.data.harga)}</td>
-                            <td class="subtotal" id="jumlah">${formatNumber(response.data.jumlah)}</td>
-                            <td>
-                                <a href="javascript:void(0);" class="action-icon" onclick="edit('${response.data.list_id}')">
-                                    <i class="mdi mdi-square-edit-outline"></i>
-                                </a>
-                                <a href="javascript:void(0)" onclick="hapus('${response.data.list_id}')" class="action-icon"><i class="mdi mdi-delete"></i></a>
-                            </td>
-                        </tr>
-                    `;
-                    $(`#list_id${response.data.list_id}`).replaceWith(newRow);
-
-                    updateGrandTotal();
-                    console.log(response.data);
-                }
-            });
-        }
-
         $(document).ready(function() {
-            var path = "{{ route('autocomplete_bk') }}";
+            var path = "{{ route('autocomplete_bm') }}";
             $("#search").autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -316,7 +186,7 @@
             });
         })
 
-        var insertlist = "{{ route('insertlist_bk') }}";
+        var insertlist = "{{ route('insertlist_bm') }}";
         $('#add').click(function(e) {
             e.preventDefault();
             let kodetransaksi = $('#notransaksi').val();
@@ -344,15 +214,15 @@
                 success: function(response) {
 
                     let post = `
-                    <tr id="list_id${response.data.list_id}">
+                    <tr id="list_id-${response.data.list_id}">
                         <td>${response.data.kode}</td>
                         <td>${response.data.nama}</td>
                         <td>
                             <input type="text" name="qty" id="qty-${response.data.list_id}" class="form-control" value="${response.data.qty}">
                         </td>
-                        <td>${response.data.diskon}%</td>
-                        <td id="harga">${formatNumber(response.data.harga)}</td>
-                        <td class="subtotal" id="jumlah">${formatNumber(response.data.jumlah)}</td>
+                        <td id="harga">${formatNumber(response.data.hargajual)}</td>
+                        <td><input type="text" name="hargabeli" id="hargabeli-${response.data.list_id}" class="form-control" value="${response.data.hargabeli}"></td>
+                        <td class="subtotal" id="total-${response.data.list_id}">${formatNumber(response.data.jumlah)}</td>
                         <td>
                             <a href="javascript:void(0);" class="action-icon" onclick="edit('${response.data.list_id}')">
                                 <i class="mdi mdi-square-edit-outline"></i>
@@ -370,18 +240,106 @@
             })
         })
 
-        var simpan = "{{ route('transaksi.store') }}";
+        function edit(list_id) {
+            var url = "{{ route('list_bm.update') }}";
+            var currentQty = $('#qty-' + list_id).val();
+            var currenthargabeli = $('#hargabeli-' + list_id).val();
+            var currentJumlah = $('#total-' + list_id).val();
+
+            var newData = {
+                'list_id': list_id,
+                'qty': currentQty,
+                'hargabeli': currenthargabeli,
+                'jumlah': currentJumlah,
+                '_token': $("meta[name='csrf-token']").attr("content")
+            }
+
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "JSON",
+                data: newData,
+                success: function(response) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Data berhasil diubah',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    let newRow = `
+                        <tr id="list_id-${response.data.list_id}">
+                            <td>${response.data.kode}</td>
+                            <td>${response.data.nama}</td>
+                            <td>
+                                <input type="text" name="qty" id="qty-${response.data.list_id}" class="form-control" value="${response.data.qty}">
+                            </td>
+                            <td id="harga">${formatNumber(response.data.hargajual)}</td>
+                            <td>
+                                <input type="text" name="hargabeli" id="hargabeli-${response.data.list_id}" class="form-control" value="${response.data.hargabeli}">
+                            </td>
+                            <td class="subtotal" id="jumlah">${formatNumber(response.data.jumlah)}</td>
+                            <td>
+                                <a href="javascript:void(0);" class="action-icon" onclick="edit('${response.data.list_id}')">
+                                    <i class="mdi mdi-square-edit-outline"></i>
+                                </a>
+                                <a href="javascript:void(0)" onclick="hapus('${response.data.list_id}')" class="action-icon"><i class="mdi mdi-delete"></i></a>
+                            </td>
+                        </tr>
+                    `;
+                    $(`#list_id-${response.data.list_id}`).replaceWith(newRow);
+
+                    updateGrandTotal();
+                    console.log(response.data);
+                }
+            });
+        }
+
+        function hapus(list_id) {
+            var url = "{{ route('list_bm.destroy', ':list_id') }}";
+            url = url.replace(':list_id', list_id);
+            Swal.fire({
+                title: "Yakin ingin menghapus data ini?",
+                text: "Ketika data terhapus, anda tidak bisa mengembalikan data tersbut!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Hapus!"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: url,
+                        type: "get",
+                        dataType: "JSON",
+                        success: function(data) {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Data berhasil dihapus',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            console.log("berhasil hapus data");
+                            $("#list_id-" + list_id).remove();
+
+                            updateGrandTotal();
+                        }
+                    })
+                }
+            })
+        }
+
+        var simpan = "{{ route('transaksibm.store') }}";
         $('#simpan').click(function(e) {
             e.preventDefault();
             let kodetransaksi = $('#notransaksi').val();
             let tanggal = $('#tanggal').val();
-            let customer = $('#customer').val();
-            let diskon = $('#diskon').val();
-            let totalbayar = $('#totalbayar').val();
-            totalbayar = totalbayar.replace('Rp', '').replace('.', '').replace(',- ', '');
-            let dibayar = $('#dibayar').val();
-            let kembalian = $('#kembalian').val();
-            kembalian = kembalian.replace('Rp', '').replace('.', '').replace(',- ', '');
+            let supplier = $('#supplier').val();
+            let grandTotal = $('#grandTotal').text();
+            grandTotal = grandTotal.replace('.', '');
             let token = $("meta[name='csrf-token']").attr("content");
 
             $.ajaxSetup({
@@ -397,22 +355,15 @@
                 data: {
                     "kode_transaksi": kodetransaksi,
                     "tanggal": tanggal,
-                    "customer": customer,
-                    "diskon": diskon,
-                    "total_bayar": parseFloat(totalbayar),
-                    "jumlah_uang": dibayar,
-                    "kembali": parseFloat(kembalian),
+                    "supplier": supplier,
+                    "grand_total": grandTotal,
                     "_token": token
                 },
                 success: function(response) {
                     let newNotransaksi = response.new_kode_transaksi;
                     $('#notransaksi').val(newNotransaksi);
                     $('#tanggal').val('');
-                    $('#customer').val('');
-                    $('#diskon').val('');
-                    $('#totalbayar').val('');
-                    $('#dibayar').val('');
-                    $('#kembalian').val('');
+                    $('#supplier').val('');
 
                     swal.fire({
                         icon: 'success',

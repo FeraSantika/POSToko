@@ -72,12 +72,12 @@
             </li>
 
             <li class="side-nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarDashboards" aria-expanded="false"
+                <a data-bs-toggle="collapse" href="#sidebarMenu" aria-expanded="false"
                     aria-controls="sidebarDashboards" class="side-nav-link">
                     <i class="uil-home-alt"></i>
                     <span> Master Menu </span>
                 </a>
-                <div class="collapse" id="sidebarDashboards">
+                <div class="collapse" id="sidebarMenu">
                     <ul class="side-nav-second-level">
                         <li>
                             <a class="nav-link {{ Route::current()->getName() == 'menu' ? 'active' : '' }}"
@@ -118,6 +118,26 @@
                         <li>
                             <a class="nav-link {{ Route::current()->getName() == 'transaksi.bm' ? 'active' : '' }}""
                                 href="{{route('transaksi.bm')}}">Transaksi Barang Masuk</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="side-nav-item">
+                <a data-bs-toggle="collapse" href="#sidebarLaporan" aria-expanded="false"
+                    aria-controls="sidebarDashboards" class="side-nav-link">
+                    <i class="uil-clipboard-blank"></i>
+                    <span> Laporan </span>
+                </a>
+                <div class="collapse" id="sidebarLaporan">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'laporan.bk' ? 'active' : '' }}"
+                                href="{{ route('laporan.bk') }}">Laporan Barang Keluar</a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'laporan.bm' ? 'active' : '' }}""
+                                href="{{route('laporan.bm')}}">Laporan Barang Masuk</a>
                         </li>
                     </ul>
                 </div>

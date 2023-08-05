@@ -19,4 +19,16 @@ class Transaksi_barang_keluar extends Model
         'dibayar',
         'kembalian',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(DataUser::class, 'kode_kasir', 'User_id');
+    }
+
+    public function list()
+    {
+        return $this->hasMany(List_barang_keluar::class, 'kode_transaksi', 'kode_transaksi')->with('barang');
+    }
+
+
 }

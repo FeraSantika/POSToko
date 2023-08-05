@@ -16,6 +16,7 @@ return new class extends Migration
             $table->char('kode_transaksi');
             $table->date('tanggal_tbm');
             $table->integer('kode_supplier');
+            $table->integer('harga_total');
             $table->timestamps();
         });
     }

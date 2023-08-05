@@ -15,6 +15,12 @@ class DatabarangkeluarController extends Controller
 {
     public function index()
     {
+        $dtbarangkeluar = Transaksi_barang_keluar::with('user')->get();
+        return view('transaksibarangkeluar.barangkeluar', compact('dtbarangkeluar'));
+    }
+
+    public function create()
+    {
         $dtbarang = DataBarang::first();
         $prefix = 'TK';
         $length = 4;
@@ -33,7 +39,7 @@ class DatabarangkeluarController extends Controller
 
         $listbarang = List_barang_keluar::with('barang')->get();
 
-        return view('transaksi.barangkeluar', compact('transactionCode', 'lastTransaction', 'dtbarang', 'listbarang'));
+        return view('transaksibarangkeluar.createbarangkeluar', compact('transactionCode', 'lastTransaction', 'dtbarang', 'listbarang'));
     }
 
     public function autocomplete(Request $request)
@@ -151,5 +157,16 @@ class DatabarangkeluarController extends Controller
             'message' => 'Data Post Berhasil Dihapus!.',
             'data' => $listbarang,
         ]);
+    }
+
+    public function cetakResi($bk_id)
+    {
+        $transaksibk = Transaksi_barang_keluar::where('kode_transaksi', $bk_id)->with('list', 'user')->first();
+        return view('transaksibarangkeluar.resi', compact('transaksibk'));
+    }
+
+    public function detail($id){
+        $transaksi_bk = Transaksi_barang_keluar::where('kode_transaksi', $id)->with('list', 'user')->first();
+        return view('transaksibarangkeluar.detailbarangkeluar', compact('transaksi_bk'));
     }
 }

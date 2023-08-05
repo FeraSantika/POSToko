@@ -15,4 +15,8 @@ class DataSupplier extends Model
         'alamat_supplier',
         'telp_supplier',
     ];
+
+    public function transaksibarangmasuk(){
+        return $this->hasMany(Transaksi_barang_masuk::class, 'kode_supplier', 'kode_supplier');
+    }
 }
