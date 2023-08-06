@@ -33,43 +33,42 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-2">
-                                <div class="col-sm-5"></div>
-                                <div class="col-sm-7">
-                                    <form action="{{ route('export_laporanbm') }}" method="GET">
-                                    <div class="text-sm-end">
-                                        <button type="button" class="btn btn-success mb-2 me-1"><i
-                                                class="mdi mdi-cog-outline"></i></button>
-                                        <button type="button" class="btn btn-light mb-2 me-1">Import</button>
-                                        <button type="submit"
-                                            class="btn btn-light mb-2">Export</button>
-                                    </div>
-                                </div><!-- end col-->
-                            </div>
-                            <div class="row mb-2">
-                                <div class="row mb-3">
-                                    <div class="col-md-2">
-                                        <label for="tanggalAwal" class="form-label form-inline">Tanggal Awal :</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input type="date" id="tanggalAwal" name="tanggalAwal" class="form-control"
-                                            placeholder="Tanggal">
-                                    </div>
-                                    <div class="col md-2"></div>
-                                    <div class="col-md-2">
-                                        <label for="tanggalAkhir" class="form-label form-inline">Tanggal Akhir :</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input type="date" id="tanggalAkhir" name="tanggalAkhir" class="form-control"
-                                            placeholder="Tanggal">
-                                    </div>
-                                </form>
-                                    <div class="col md-2">
-                                        <button type="button" class="btn btn-primary"
-                                            onclick="tampilkanData()">Filter</button>
+                            <form action="{{ route('export_laporanbm') }}" method="GET">
+                                <div class="row mb-2">
+                                    <div class="col-sm-5"></div>
+                                    <div class="col-sm-7">
+                                        <div class="text-sm-end">
+                                            <button type="button" class="btn btn-success mb-2 me-1"><i
+                                                    class="mdi mdi-cog-outline"></i></button>
+                                            <button type="button" class="btn btn-light mb-2 me-1">Import</button>
+                                            <button type="submit" class="btn btn-light mb-2">Export</button>
+                                        </div>
+                                    </div><!-- end col-->
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="row mb-3">
+                                        <div class="col-md-2">
+                                            <label for="tanggalAwal" class="form-label form-inline">Tanggal Awal :</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="date" id="tanggalAwal" name="tanggalAwal" class="form-control">
+                                        </div>
+                                        <div class="col md-2"></div>
+                                        <div class="col-md-2">
+                                            <label for="tanggalAkhir" class="form-label form-inline">Tanggal Akhir :</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="date" id="tanggalAkhir" name="tanggalAkhir"
+                                                class="form-control">
+                                        </div>
+
+                                        <div class="col md-2">
+                                            <button type="button" class="btn btn-primary"
+                                                onclick="tampilkanData()">Filter</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
 
                             <div class="table-responsive">
                                 <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
@@ -151,6 +150,5 @@
                     hasilData.innerHTML = 'Terjadi kesalahan saat memuat data.';
                 });
         }
-
     </script>
 @endsection

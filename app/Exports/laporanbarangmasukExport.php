@@ -24,7 +24,7 @@ class laporanbarangmasukExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        $data = Transaksi_barang_masuk::where('tanggal_tbm', [$this->tglAwal, $this->tglAkhir])->with('supplier')->get();
+        $data = Transaksi_barang_masuk::whereBetween('tanggal_tbm', [$this->tglAwal, $this->tglAkhir])->with('supplier')->get();
         $formattedData = collect($data)->map(function ($item) {
             return [
                 $item->kode_transaksi,

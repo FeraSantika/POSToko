@@ -26,17 +26,19 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
+        $menuCategory = $request->category;
+        $menuSub = $menuCategory === 'Master Menu' ? null : $request->submenu;
         $result = DataMenu::insert([
             'Menu_name' => $request->name,
             'Menu_link' => $request->link,
-            'Menu_category' => $request->category,
-            'Menu_sub' => $request->submenu,
+            'Menu_category' => $menuCategory,
+            'Menu_sub' => $menuSub,
             'Menu_position' => $request->position,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         if ($result) {
-            return redirect()->route('menu')->with('success', 'Product created successfully.');
+            return redirect()->route('menu');
         } else {
             return $this->create();
         }
@@ -44,17 +46,21 @@ class MenuController extends Controller
 
     public function edit($Menu_id)
     {
-        $dtMenu = DataMenu::where('Menu_id', $Menu_id)->get();
-        return view('menu.edit', compact('dtMenu'));
+        $dtMenu = DataMenu::where('Menu_id', $Menu_id)->first();
+        $menu = DataMenu::where('Menu_category', 'master menu')
+        ->get();
+        return view('menu.edit', compact('dtMenu', 'menu'));
     }
 
     public function update(Request $request, $Menu_id)
     {
+        $menuCategory = $request->category;
+        $menuSub = $menuCategory === 'Master Menu' ? null : $request->submenu;
         DataMenu::where('Menu_id', $Menu_id)->update([
             'Menu_name' => $request->name,
             'Menu_link' => $request->link,
-            'Menu_category' => $request->category,
-            'Menu_sub' => $request->submenu,
+            'Menu_category' => $menuCategory,
+            'Menu_sub' => $menuSub,
             'Menu_position' => $request->position,
             'updated_at' => now(),
         ]);
