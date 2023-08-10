@@ -22,4 +22,9 @@ class List_barang_masuk extends Model
     {
         return $this->hasMany(DataBarang::class, 'kode_barang', 'kode_barang');
     }
+
+    public function transaksi()
+    {
+        return $this->belongsTo(Transaksi_barang_masuk::class, 'kode_transaksi', 'kode_transaksi');
+    }
 }

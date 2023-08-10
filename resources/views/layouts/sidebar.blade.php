@@ -132,8 +132,16 @@
                 <div class="collapse" id="sidebarLaporan">
                     <ul class="side-nav-second-level">
                         <li>
-                            <a class="nav-link {{ Route::current()->getName() == 'laporan.bk' ? 'active' : '' }}"
-                                href="{{ route('laporan.bk') }}">Laporan Barang Keluar</a>
+                            <a class="nav-link {{ Route::current()->getName() == 'laporan.tbk' ? 'active' : '' }}"
+                                href="{{ route('laporan.tbk') }}">Laporan Transaksi Keluar</a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'laporan.tbm' ? 'active' : '' }}""
+                                href="{{route('laporan.tbm')}}">Laporan Transaksi Masuk</a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'laporan.bk' ? 'active' : '' }}""
+                                href="{{route('laporan.bk')}}">Laporan Barang Keluar</a>
                         </li>
                         <li>
                             <a class="nav-link {{ Route::current()->getName() == 'laporan.bm' ? 'active' : '' }}""

@@ -19,6 +19,11 @@ class List_barang_keluar extends Model
     ];
 
     public function barang(){
-        return $this->hasMany(DataBarang::class, 'kode_barang', 'kode_barang');
+        return $this->hasMany(DataBarang::class, 'kode_barang', 'kode_barang')->with('kategori');
+    }
+
+    public function transaksi()
+    {
+        return $this->belongsTo(Transaksi_barang_keluar::class, 'kode_transaksi', 'kode_transaksi');
     }
 }

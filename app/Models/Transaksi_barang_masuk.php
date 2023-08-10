@@ -21,6 +21,6 @@ class Transaksi_barang_masuk extends Model
     }
 
     public function list(){
-        return $this->hasMany(List_barang_masuk::class, 'kode_transaksi', 'kode_transaksi')->with('barang');
+        return $this->hasMany(List_barang_masuk::class, 'kode_transaksi', 'kode_transaksi')->groupBy('kode_barang')->with('barang');
     }
 }

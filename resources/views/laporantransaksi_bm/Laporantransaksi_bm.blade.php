@@ -33,15 +33,17 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('export_laporanbm') }}" method="GET">
+                            <form id="exportForm" action="{{ route('exportexcel_laporantbm') }}" method="GET">
                                 <div class="row mb-2">
                                     <div class="col-sm-5"></div>
                                     <div class="col-sm-7">
                                         <div class="text-sm-end">
                                             <button type="button" class="btn btn-success mb-2 me-1"><i
                                                     class="mdi mdi-cog-outline"></i></button>
-                                            <button type="button" class="btn btn-light mb-2 me-1">Import</button>
-                                            <button type="submit" class="btn btn-light mb-2">Export</button>
+                                            <button type="submit" class="btn btn-light mb-2 me-1"><i class="uil-print"></i>
+                                                Excel</button>
+                                            <a href="#" class="btn btn-primary mb-2 me-1"
+                                                onclick="exportPDFWithDates()"><i class="uil-print"></i>PDF</a>
                                         </div>
                                     </div><!-- end col-->
                                 </div>
@@ -78,9 +80,13 @@
                                             <th>Tanggal</th>
                                             <th>Supplier</th>
                                             <th>Total</th>
-                                            <th></th>
                                         </tr>
                                     </thead>
+
+                                    <?php
+                                    $grandTotal = 0;
+                                    ?>
+
                                     <tbody id="laporanbarangmasuk">
                                         @foreach ($dtbarangmasuk as $item)
                                             <tr>
@@ -94,11 +100,22 @@
                                                     {{ $item->supplier->nama_supplier }}
                                                 </td>
                                                 <td>
-                                                    {{ number_format($item->harga_total, 0, ',', '.') }}
+                                                    Rp {{ number_format($item->harga_total, 0, ',', '.') }}
                                                 </td>
                                             </tr>
+
+                                            <?php
+                                            $grandTotal += $item->harga_total;
+                                            ?>
                                         @endforeach
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3"> Grand Total : </td>
+                                            <td id="grandTotal">
+                                                Rp {{ number_format($grandTotal, 0, ',', '.') }}</td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div> <!-- end card-body-->
@@ -124,20 +141,28 @@
             const hasilData = document.getElementById('laporanbarangmasuk');
             hasilData.innerHTML = '';
 
-            fetch(`/admin/laporan_bm/get_data?tanggalAwal=${tanggalAwal}&tanggalAkhir=${tanggalAkhir}`)
+            fetch(`/admin/laporan_tbm/get_data?tanggalAwal=${tanggalAwal}&tanggalAkhir=${tanggalAkhir}`)
                 .then(response => response.json())
                 .then(dataTerfilter => {
                     if (dataTerfilter.length > 0) {
                         let tableHTML = '<table class="table table-centered w-100 dt-responsive nowrap">';
                         tableHTML += '<tbody>';
+
+                        let grandTotal = 0;
+
                         dataTerfilter.forEach(item => {
                             tableHTML += '<tr>';
                             tableHTML += `<td>${item.kode_transaksi}</td>`;
                             tableHTML += `<td>${item.tanggal_tbm}</td>`;
                             tableHTML += `<td>${item.supplier ? item.supplier.nama_supplier : 'N/A'}</td>`;
-                            tableHTML += `<td>${item.harga_total}</td>`;
+                            tableHTML += `<td>${formatNumber(item.harga_total)}</td>`;
                             tableHTML += '</tr>';
+
+                            grandTotal += item.harga_total;
                         });
+
+                        const grandTotalElem = document.getElementById('grandTotal');
+                        grandTotalElem.innerText = formatNumber(grandTotal);
 
                         tableHTML += '</tbody> </table>';
                         hasilData.innerHTML = tableHTML;
@@ -149,6 +174,16 @@
                     console.error('Error:', error);
                     hasilData.innerHTML = 'Terjadi kesalahan saat memuat data.';
                 });
+        }
+
+        function exportPDFWithDates() {
+            var tanggalAwal = document.getElementById('tanggalAwal').value;
+            var tanggalAkhir = document.getElementById('tanggalAkhir').value;
+
+            var pdfURL = "{{ route('exportpdf_laporantbm') }}" + "?tanggalAwal=" + tanggalAwal + "&tanggalAkhir=" +
+                tanggalAkhir;
+
+            window.location.href = pdfURL;
         }
     </script>
 @endsection

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class Transaksi_barang_keluar extends Model
 {
@@ -27,7 +28,7 @@ class Transaksi_barang_keluar extends Model
 
     public function list()
     {
-        return $this->hasMany(List_barang_keluar::class, 'kode_transaksi', 'kode_transaksi')->with('barang');
+        return $this->hasMany(List_barang_keluar::class, 'kode_transaksi', 'kode_transaksi')->groupBy('kode_barang')->with('barang');
     }
 
 

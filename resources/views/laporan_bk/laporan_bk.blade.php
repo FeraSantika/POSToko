@@ -1,11 +1,4 @@
 @extends('main')
-@section('style')
-    <style>
-        .rata-kanan {
-            text-align: right;
-        }
-    </style>
-@endsection
 @section('content')
     <div class="content">
 
@@ -19,11 +12,10 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Master Menu</a></li>
-                                <li class="breadcrumb-item active">Laporan Barang Keluar</li>
+                                <li class="breadcrumb-item active">Barang</li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Laporan Barang Keluar</h4>
+                        <h4 class="page-title">Barang Keluar</h4>
                     </div>
                 </div>
             </div>
@@ -36,16 +28,18 @@
                             <div class="row mb-2">
                                 <div class="col-sm-5"></div>
                                 <div class="col-sm-7">
-                                    <form action="{{ route('export_laporanbk') }}" method="GET">
+                                    <form id="exportForm" action="{{ route('exportexcel_laporanbk') }}" method="GET">
                                         <div class="text-sm-end">
                                             <button type="button" class="btn btn-success mb-2 me-1"><i
                                                     class="mdi mdi-cog-outline"></i></button>
-                                            <button type="button" class="btn btn-light mb-2 me-1">Import</button>
-                                            <button type="submit"
-                                                class="btn btn-light mb-2">Export</button>
+                                            <button type="submit" class="btn btn-light mb-2 me-1"><i class="uil-print"></i>
+                                                Excel</button>
+                                            <a href="#" class="btn btn-primary mb-2 me-1"
+                                                onclick="exportPDFWithDates()"><i class="uil-print"></i>PDF</a>
                                         </div>
                                 </div><!-- end col-->
                             </div>
+
                             <div class="row mb-2">
                                 <div class="row mb-3">
                                     <div class="col-md-2">
@@ -70,61 +64,54 @@
                                 </div>
                             </div>
                             </form>
+
                             <div class="table-responsive">
                                 <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Kode Transaksi</th>
-                                            <th>Tanggal</th>
-                                            <th>Nama Kasir</th>
-                                            <th>Customer</th>
-                                            <th>Diskon</th>
-                                            <th>Jumlah Bayar</th>
-                                            <th>Dibayar</th>
-                                            <th>Kembalian</th>
-                                            <th></th>
+                                            <th>Nama Barang</th>
+                                            <th>Kategori</th>
+                                            <th>Terjual</th>
                                         </tr>
                                     </thead>
+
+                                    <?php
+                                    $total = 0;
+                                    ?>
+
                                     <tbody id="laporanbarang">
-                                        @foreach ($dtbarangkeluar as $item)
+                                        @foreach ($bk as $kodeBarang => $group)
                                             <tr>
+                                                @foreach ($group->barang as $barang)
+                                                    <td>
+                                                        {{ $barang->nama_barang }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $barang->kategori->nama_kategori }}
+                                                    </td>
+                                                @endforeach
                                                 <td>
-                                                    {{ $item->kode_transaksi }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->tanggal_tbk }}
-                                                </td>
-                                                <td>
-                                                    @if ($item->user)
-                                                        {{ $item->user->User_name }}
-                                                    @else
-                                                        N/A
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    {{ $item->customer }}
-                                                </td>
-                                                <td id="diskon_tbk" class="rata-kanan">
-                                                    {{ $item->diskon_tbk }}
-                                                </td>
-                                                <td id="total_bayar" class="rata-kanan">
-                                                    {{ number_format($item->total_bayar, 0, ',', '.') }}
-                                                </td>
-                                                <td id="dibayar" class="rata-kanan">
-                                                    {{ number_format($item->dibayar, 0, ',', '.') }}
-                                                </td>
-                                                <td id="kembalian" class="rata-kanan">
-                                                    {{ number_format($item->kembalian, 0, ',', '.') }}
+                                                    {{ $group->jumlahbk }}
                                                 </td>
                                             </tr>
+                                            <?php
+                                            $total += $group->jumlahbk;
+                                            ?>
                                         @endforeach
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2">Grand Total : </td>
+                                            <td id="total">{{ $total }}</td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div> <!-- end card-body-->
                     </div> <!-- end card-->
                 </div> <!-- end col -->
-            </div><!-- end row -->
+            </div>
+            <!-- end row -->
         </div> <!-- container -->
     </div>
 @endsection
@@ -137,50 +124,50 @@
             }).format(number);
         }
 
-        function printResi(kode) {
-            var printWindow = window.open('{{ route('cetak.resi', ['bk_id' => ':bk_id']) }}'.replace(':bk_id', kode),
-                'width=800,height=600');
-            printWindow.onload = function() {
-                printWindow.print();
-            };
-        }
-
         function tampilkanData(kode) {
             const tanggalAwal = document.getElementById('tanggalAwal').value;
             const tanggalAkhir = document.getElementById('tanggalAkhir').value;
             const hasilData = document.getElementById('laporanbarang');
             hasilData.innerHTML = '';
+            const totaljualElem = document.getElementById('total');
 
             fetch(`/admin/laporan_bk/get_data?tanggalAwal=${tanggalAwal}&tanggalAkhir=${tanggalAkhir}`)
                 .then(response => response.json())
                 .then(dataTerfilter => {
+                    let totaljual = 0;
                     if (dataTerfilter.length > 0) {
                         let tableHTML = '<table class="table table-centered w-100 dt-responsive nowrap">';
                         tableHTML += '<tbody>';
 
-                        dataTerfilter.forEach(item => {
-                            tableHTML += '<tr>';
-                            tableHTML += `<td>${item.kode_transaksi}</td>`;
-                            tableHTML += `<td>${item.tanggal_tbk}</td>`;
-                            tableHTML += `<td>${item.user ? item.user.User_name : 'N/A'}</td>`;
-                            tableHTML += `<td>${item.customer}</td>`;
-                            tableHTML += `<td class="rata-kanan">${item.diskon_tbk}</td>`;
-                            tableHTML += `<td class="rata-kanan">${formatNumber(item.total_bayar)}</td>`;
-                            tableHTML += `<td class="rata-kanan">${formatNumber(item.dibayar)}</td>`;
-                            tableHTML += `<td class="rata-kanan">${formatNumber(item.kembalian)}</td>`;
-                            tableHTML += '</tr>';
+                        dataTerfilter.forEach(group => {
+                            if (Array.isArray(group.barang)) {
+                                group.barang.forEach(barang => {
+                                    tableHTML += '<tr>';
+                                    tableHTML += `<td>${barang.nama_barang}</td>`;
+                                    tableHTML += `<td>${barang.kategori.nama_kategori}</td>`;
+                                    tableHTML += `<td>${group.jumlahbk}</td>`;
+                                    tableHTML += '</tr>';
+                                    totaljual += parseInt(group.jumlahbk);
+                                });
+                            }
                         });
-
+                        totaljualElem.innerText = totaljual;
                         tableHTML += '</tbody> </table>';
                         hasilData.innerHTML = tableHTML;
                     } else {
                         hasilData.innerHTML = 'Tidak ada data pada rentang tanggal yang dipilih.';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    hasilData.innerHTML = 'Terjadi kesalahan saat memuat data.';
+                    };
                 });
+        }
+
+        function exportPDFWithDates() {
+            var tanggalAwal = document.getElementById('tanggalAwal').value;
+            var tanggalAkhir = document.getElementById('tanggalAkhir').value;
+
+            var pdfURL = "{{ route('exportpdf_laporanbk') }}" + "?tanggalAwal=" + tanggalAwal + "&tanggalAkhir=" +
+                tanggalAkhir;
+
+            window.location.href = pdfURL;
         }
     </script>
 @endsection

@@ -12,11 +12,13 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Laporan_bkController;
+use App\Http\Controllers\Laporan_bmController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DatabarangmasukController;
 use App\Http\Controllers\DatabarangkeluarController;
-use App\Http\Controllers\LaporanbarangmasukController;
-use App\Http\Controllers\LaporanbarangkeluarController;
+use App\Http\Controllers\Laporantransaksi_bmController;
+use App\Http\Controllers\Laporantransaksi_bkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,16 +111,32 @@ Route::controller(DatabarangmasukController::class)->group(function(){
     Route::get('/admin/transaksi_bm/detail_bm/{id}', 'detail')->name('detail_bm');
 });
 
-Route::controller(LaporanbarangmasukController::class)->group(function(){
-    Route::get('admin/laporan_bm', 'index')->name('laporan.bm');
-    Route::get('admin/laporan_bm/get_data', 'getDataByDate')->name('laporan_bm.get_data');
-    Route::get('/export_laporanbm', 'export')->name('export_laporanbm');
+Route::controller(Laporantransaksi_bkController::class)->group(function(){
+    Route::get('admin/laporan_tbk', 'index')->name('laporan.tbk');
+    Route::get('admin/laporan_tbk/get_data', 'getDataByDate')->name('laporan_tbk.get_data');
+    Route::get('/exportexcel_laporantbk', 'export')->name('exportexcel_laporantbk');
+    Route::get('/exportpdf_laporantbk', 'exportPDF')->name('exportpdf_laporantbk');
 });
 
-Route::controller(LaporanbarangkeluarController::class)->group(function(){
+Route::controller(Laporantransaksi_bmController::class)->group(function(){
+    Route::get('admin/laporan_tbm', 'index')->name('laporan.tbm');
+    Route::get('admin/laporan_tbm/get_data', 'getDataByDate')->name('laporan_tbm.get_data');
+    Route::get('/exportexcel_laporantbm', 'export')->name('exportexcel_laporantbm');
+    Route::get('/exportpdf_laporantbm', 'exportPDF')->name('exportpdf_laporantbm');
+});
+
+Route::controller(Laporan_bkController::class)->group(function(){
     Route::get('admin/laporan_bk', 'index')->name('laporan.bk');
     Route::get('admin/laporan_bk/get_data', 'getDataByDate')->name('laporan_bk.get_data');
-    Route::get('/export_laporanbk', 'export')->name('export_laporanbk');
+    Route::get('/exportexcel_laporanbk', 'export')->name('exportexcel_laporanbk');
+    Route::get('/exportpdf_laporanbk', 'exportPDF')->name('exportpdf_laporanbk');
+});
+
+Route::controller(Laporan_bmController::class)->group(function(){
+    Route::get('admin/laporan_bm', 'index')->name('laporan.bm');
+    Route::get('admin/laporan_bm/get_data', 'getDataByDate')->name('laporan_bm.get_data');
+    Route::get('/exportexcel_laporanbm', 'export')->name('exportexcel_laporanbm');
+    Route::get('/exportpdf_laporanbm', 'exportPDF')->name('exportpdf_laporanbm');
 });
 
 
