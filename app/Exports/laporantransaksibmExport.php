@@ -16,11 +16,13 @@ class laporantransaksibmExport implements FromCollection, WithHeadings, ShouldAu
      */
     public $tglAwal;
     public $tglAkhir;
+    private $serialNumber;
 
     function __construct($tglAwal, $tglAkhir)
     {
         $this->tglAwal = $tglAwal;
         $this->tglAkhir = $tglAkhir;
+        $this->serialNumber = 1;
     }
 
     public function collection()
@@ -36,6 +38,7 @@ class laporantransaksibmExport implements FromCollection, WithHeadings, ShouldAu
 
         $formattedData = collect($data)->map(function ($item) {
             return [
+                'No' => $this->serialNumber++,
                 'Kode Transaksi' => $item->kode_transaksi,
                 'Tanggal Transaksi' => $item->tanggal_tbm,
                 'Nama Supplier' => optional($item->supplier)->nama_supplier ?? 'N/A',
@@ -44,14 +47,8 @@ class laporantransaksibmExport implements FromCollection, WithHeadings, ShouldAu
         });
 
         $formattedData->push([
+            'No' => 'Grand Total',
             'Kode Transaksi' => '',
-            'Tanggal Transaksi' => '',
-            'Nama Supplier' => '',
-            'Total Harga' => '',
-        ]);
-
-        $formattedData->push([
-            'Kode Transaksi' => 'Grand Total',
             'Tanggal Transaksi' => '',
             'Nama Supplier' => '',
             'Total Harga' => 'Rp' . '. ' . number_format($grandtotal, 2, ',', '.'),
@@ -62,10 +59,15 @@ class laporantransaksibmExport implements FromCollection, WithHeadings, ShouldAu
 
     public function headings(): array
     {
+        $dateRangeText = $this->tglAwal && $this->tglAkhir
+            ? "Rentang Tanggal : {$this->tglAwal} hingga {$this->tglAkhir}"
+            : '';
+
         return [
             ['Laporan Transaksi Barang Keluar'],
-            [],
+            [$dateRangeText],
             [
+                'No',
                 'Kode Transaksi',
                 'Tanggal',
                 'Supplier',
@@ -84,17 +86,20 @@ class laporantransaksibmExport implements FromCollection, WithHeadings, ShouldAu
                 'alignment' => ['horizontal' => 'center'],
                 'borders' => ['outline' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]],
             ],
-            'A1:D1' => [
+            'A1:E1' => [
                 'alignment' => ['horizontal' => 'center'],
                 'font' => ['bold' => true],
             ],
-            'A3:D3' => [
+            'A2:E2' =>[
+                'alignment' => ['horizontal' => 'left'],
+            ],
+            'A3:E3' => [
                 'alignment' => ['horizontal' => 'center'],
                 'font' => ['bold' => true],
             ],
-            'A1:D' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
-            'A2:D' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
-            'A3:D' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
+            'A1:E' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
+            'A2:E' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
+            'A3:E' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
         ];
     }
 
@@ -107,6 +112,7 @@ class laporantransaksibmExport implements FromCollection, WithHeadings, ShouldAu
     {
         if ($data['Kode Transaksi'] === '' && $data['Tanggal Transaksi'] === '' && $data['Nama Supplier'] === '') {
             return [
+                'No' => $data['No'],
                 'Kode Transaksi' => $data['Kode Transaksi'],
                 'Tanggal Transaksi' => $data['Tanggal Transaksi'],
                 'Nama Supplier' => $data['Nama Supplier'],
@@ -114,6 +120,7 @@ class laporantransaksibmExport implements FromCollection, WithHeadings, ShouldAu
             ];
         } else {
             return [
+                'No' => $data['No'],
                 'Kode Transaksi' => $data['Kode Transaksi'],
                 'Tanggal Transaksi' => $data['Tanggal Transaksi'],
                 'Nama Supplier' => $data['Nama Supplier'],

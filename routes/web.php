@@ -8,17 +8,18 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BaseUiController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Laporan_bkController;
 use App\Http\Controllers\Laporan_bmController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DatabarangmasukController;
 use App\Http\Controllers\DatabarangkeluarController;
-use App\Http\Controllers\Laporantransaksi_bmController;
 use App\Http\Controllers\Laporantransaksi_bkController;
+use App\Http\Controllers\Laporantransaksi_bmController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,11 @@ Route::get('/admin/login', [LoginController::class, 'showLoginForm'])->name('Adm
 Route::get('/admin/register', [RegisterController::class, 'showRegisterForm'])->name('Adminregister');
 Route::get('/admin/home', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.home');
 Route::get('/tampil', [App\Http\Controllers\HomeController::class, 'tampil'])->name('tampil');
+Route::get('/admin/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::post('/admin/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+Route::get('/profile/edit-password', [ProfileController::class, 'editPassword'])->name('profile.edit-password');
+Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
+
 
 Route::get('/admin/role', [RoleController::class, 'index'])->name('role');
 Route::get('/admin/role/create', [RoleController::class, 'create'])->name('role.create');

@@ -14,11 +14,13 @@ class laporanbarangmasukExport implements FromCollection, WithHeadings, ShouldAu
 {
     public $tglAwal;
     public $tglAkhir;
+    private $serialNumber;
 
     function __construct($tglAwal, $tglAkhir)
     {
         $this->tglAwal = $tglAwal;
         $this->tglAkhir = $tglAkhir;
+        $this->serialNumber = 1;
     }
 
     public function collection()
@@ -46,6 +48,7 @@ class laporanbarangmasukExport implements FromCollection, WithHeadings, ShouldAu
             })->implode(', ');
 
             return [
+                'No' => $this->serialNumber++,
                 'Nama Barang' => $barangNames,
                 'Nama Kategori' => $kategoriNames,
                 'Terbeli' => $item->jumlahbm,
@@ -53,13 +56,8 @@ class laporanbarangmasukExport implements FromCollection, WithHeadings, ShouldAu
         });
 
         $formattedData->push([
+            'No' => 'Grand Total',
             'Nama Barang' => '',
-            'Nama Kategori' => '',
-            'Terbeli' => '',
-        ]);
-
-        $formattedData->push([
-            'Nama Barang' =>  'Grand Total',
             'Nama Kategori' => '',
             'Terbeli' => $totalJumlahTerbeli,
         ]);
@@ -69,10 +67,15 @@ class laporanbarangmasukExport implements FromCollection, WithHeadings, ShouldAu
 
     public function headings(): array
     {
+        $dateRangeText = $this->tglAwal && $this->tglAkhir
+            ? "Rentang Tanggal : {$this->tglAwal} hingga {$this->tglAkhir}"
+            : '';
+
         return [
             ['Laporan Barang masuk'],
-            [],
+            [$dateRangeText],
             [
+                'No',
                 'Nama Barang',
                 'Nama Kategori',
                 'Terbeli'
@@ -89,17 +92,20 @@ class laporanbarangmasukExport implements FromCollection, WithHeadings, ShouldAu
                 'font' => ['bold' => true],
                 'alignment' => ['horizontal' => 'center'],
             ],
-            'A1:C1' => [
+            'A1:D1' => [
                 'alignment' => ['horizontal' => 'center'],
                 'font' => ['bold' => true],
             ],
-            'A3:C3' => [
+            'A2:D2' => [
+                'alignment' => ['horizontal' => 'left'],
+            ],
+            'A3:D3' => [
                 'alignment' => ['horizontal' => 'center'],
                 'font' => ['bold' => true],
             ],
-            'A1:C' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
-            'A2:C' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
-            'A3:C' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
+            'A1:D' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
+            'A2:D' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
+            'A3:D' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
         ];
     }
 
@@ -111,6 +117,7 @@ class laporanbarangmasukExport implements FromCollection, WithHeadings, ShouldAu
     public function map($data): array
     {
         return [
+            'No' => $data['No'],
             'Nama Barang' => $data['Nama Barang'],
             'Nama Kategori' => $data['Nama Kategori'],
             'Terbeli' => $data['Terbeli'],

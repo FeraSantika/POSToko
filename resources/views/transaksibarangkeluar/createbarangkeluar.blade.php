@@ -77,29 +77,6 @@
                                         </tr>
                                     </thead>
                                     <tbody id="barangList">
-                                        {{-- @foreach ($listbarang as $item)
-                                            <tr id="list_id{{ $item->list_id }}">
-                                                <td>{{ $item->kode_barang }}</td>
-                                                <td>{{ $item->barang->nama_barang }}</td>
-                                                <td><input type="text" name="qty" id="qty-{{ $item->list_id }}"
-                                                        class="form-control" value="{{ $item->jumlah_bk }}"></td>
-                                                <td>{{ $item->diskon_bk }}%</td>
-                                                <td>{{ number_format($item->harga_jual, 0, ',', '.') }}</td>
-                                                <td class="subtotal" id="total-{{ $item->list_id }}">
-                                                    {{ number_format($item->harga_jual * $item->jumlah_bk - ($item->harga_jual * $item->jumlah_bk * $item->diskon_bk) / 100, 0, ',', '.') }}
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="action-icon"
-                                                        onclick="edit('{{ $item->list_id }}');">
-                                                        <i class="mdi mdi-square-edit-outline"></i>
-                                                    </a>
-                                                    <a href="javascript:void(0);" class="action-icon"
-                                                        onclick="hapus('{{ $item->list_id }}');">
-                                                        <i class="mdi mdi-delete"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach --}}
                                     </tbody>
                                     <tbody>
                                         <tr>

@@ -55,7 +55,7 @@ class Laporan_bmController extends Controller
                 ->get();
         }
 
-        $view = view('laporan_bm.exportpdf', compact('bm'))->render();
+        $view = view('laporan_bm.exportpdf', compact('bm', 'tglAwal', 'tglAkhir'))->render();
         $pdf = new Dompdf();
         $pdf->loadHtml($view);
         $pdf->setPaper('A4', 'portrait');

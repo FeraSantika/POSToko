@@ -12,10 +12,10 @@
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                            <li class="breadcrumb-item active">Barang</li>
+                            <li class="breadcrumb-item active">Produk</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">Barang</h4>
+                    <h4 class="page-title">Produk</h4>
                 </div>
             </div>
         </div>
@@ -32,10 +32,10 @@
                             </div>
                             <div class="col-sm-7">
                                 <div class="text-sm-end">
-                                    <button type="button" class="btn btn-success mb-2 me-1"><i
+                                    {{-- <button type="button" class="btn btn-success mb-2 me-1"><i
                                             class="mdi mdi-cog-outline"></i></button>
                                     <button type="button" class="btn btn-light mb-2 me-1">Import</button>
-                                    <button type="button" class="btn btn-light mb-2">Export</button>
+                                    <button type="button" class="btn btn-light mb-2">Export</button> --}}
                                 </div>
                             </div><!-- end col-->
                         </div>

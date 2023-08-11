@@ -19,11 +19,13 @@ class laporantransaksibkExport implements FromCollection, WithHeadings, ShouldAu
 
     public $tglAwal;
     public $tglAkhir;
+    private $serialNumber;
 
     function __construct($tglAwal, $tglAkhir)
     {
         $this->tglAwal = $tglAwal;
         $this->tglAkhir = $tglAkhir;
+        $this->serialNumber = 1;
     }
 
     public function collection()
@@ -41,37 +43,28 @@ class laporantransaksibkExport implements FromCollection, WithHeadings, ShouldAu
 
         $formattedData = collect($data)->map(function ($item) {
             return [
+                'No' => $this->serialNumber++,
                 'Kode Transaksi' => $item->kode_transaksi,
                 'Tanggal Transaksi' => $item->tanggal_tbk,
                 'Kasir' => optional($item->user)->User_name ?? 'N/A',
                 'Nama Customer' => $item->customer,
                 'Diskon' => $item->diskon_tbk,
-                'Total Bayar' => 'Rp'.'. '.number_format($item->total_bayar, 2, ',', '.'),
-                'Dibayar' => 'Rp'.'. '.number_format($item->dibayar, 2, ',', '.'),
-                'Kembalian' => 'Rp'.'. '.number_format($item->kembalian, 2, ',', '.'),
+                'Total Bayar' => 'Rp' . '. ' . number_format($item->total_bayar, 2, ',', '.'),
+                'Dibayar' => 'Rp' . '. ' . number_format($item->dibayar, 2, ',', '.'),
+                'Kembalian' => 'Rp' . '. ' . number_format($item->kembalian, 2, ',', '.'),
             ];
         });
 
         $formattedData->push([
-            'Kode Transaksi' => '',
+            'No' => 'Grand Total',
+            'Kode Transaksi' =>  '',
             'Tanggal Transaksi' => '',
             'Kasir' => '',
             'Nama Customer' => '',
             'Diskon' => '',
-            'Total Bayar' => '',
-            'Dibayar' => '',
-            'Kembalian' => '',
-        ]);
-
-        $formattedData->push([
-            'Kode Transaksi' =>  'Grand Total',
-            'Tanggal Transaksi' => '',
-            'Kasir' => '',
-            'Nama Customer' => '',
-            'Diskon' => '',
-            'Total Bayar' => 'Rp'.'. '.number_format($totaTotalbayar, 2, ',', '.'),
-            'Dibayar' => 'Rp'.'. '.number_format($totalDibayar, 2, ',', '.'),
-            'Kembalian' => 'Rp'.'. '.number_format($totalKembalian, 2, ',', '.'),
+            'Total Bayar' => 'Rp' . '. ' . number_format($totaTotalbayar, 2, ',', '.'),
+            'Dibayar' => 'Rp' . '. ' . number_format($totalDibayar, 2, ',', '.'),
+            'Kembalian' => 'Rp' . '. ' . number_format($totalKembalian, 2, ',', '.'),
         ]);
 
         return $formattedData;
@@ -79,10 +72,15 @@ class laporantransaksibkExport implements FromCollection, WithHeadings, ShouldAu
 
     public function headings(): array
     {
+        $dateRangeText = $this->tglAwal && $this->tglAkhir
+            ? "Rentang Tanggal : {$this->tglAwal} hingga {$this->tglAkhir}"
+            : '';
+
         return [
             ['Laporan Transaksi Barang Keluar'],
-            [],
+            [$dateRangeText],
             [
+                'No',
                 'Kode Transaksi',
                 'Tanggal',
                 'Nama Kasir',
@@ -105,17 +103,20 @@ class laporantransaksibkExport implements FromCollection, WithHeadings, ShouldAu
                 'alignment' => ['horizontal' => 'center'],
                 'borders' => ['outline' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]],
             ],
-            'A1:H1' => [
+            'A1:I1' => [
                 'alignment' => ['horizontal' => 'center'],
                 'font' => ['bold' => true],
             ],
-            'A3:H3' => [
+            'A2:I2' => [
+                'alignment' => ['horizontal' => 'left'],
+            ],
+            'A3:I3' => [
                 'alignment' => ['horizontal' => 'center'],
                 'font' => ['bold' => true],
             ],
-            'A1:H' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
-            'A2:H' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
-            'A3:H' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
+            'A1:I' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'tIin', 'color' => ['rgb' => '000000']]]],
+            'A2:I' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
+            'A3:I' . $lastRow => ['borders' => ['allBorders' => ['borderStyle' => 'thin', 'color' => ['rgb' => '000000']]]],
         ];
     }
 
@@ -128,6 +129,7 @@ class laporantransaksibkExport implements FromCollection, WithHeadings, ShouldAu
     {
         if ($data['Kode Transaksi'] === '' && $data['Tanggal Transaksi'] === '' && $data['Kasir'] === '') {
             return [
+                'No' => $data['No'],
                 'Kode Transaksi' => $data['Kode Transaksi'],
                 'Tanggal Transaksi' => $data['Tanggal Transaksi'],
                 'Kasir' => $data['Kasir'],
@@ -139,6 +141,7 @@ class laporantransaksibkExport implements FromCollection, WithHeadings, ShouldAu
             ];
         } else {
             return [
+                'No' => $data['No'],
                 'Kode Transaksi' => $data['Kode Transaksi'],
                 'Tanggal Transaksi' => $data['Tanggal Transaksi'],
                 'Kasir' => $data['Kasir'],

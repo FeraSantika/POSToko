@@ -19,8 +19,8 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Master Menu</a></li>
-                                <li class="breadcrumb-item active">Laporan Barang Keluar</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Laporan</a></li>
+                                <li class="breadcrumb-item active">Laporan Transaksi Barang Keluar</li>
                             </ol>
                         </div>
                         <h4 class="page-title">Laporan Barang Keluar</h4>
@@ -38,8 +38,8 @@
                                 <div class="col-sm-7">
                                     <form id="exportForm" action="{{ route('exportexcel_laporantbk') }}" method="GET">
                                         <div class="text-sm-end">
-                                            <button type="button" class="btn btn-success mb-2 me-1"><i
-                                                    class="mdi mdi-cog-outline"></i></button>
+                                            {{-- <button type="button" class="btn btn-success mb-2 me-1"><i
+                                                    class="mdi mdi-cog-outline"></i></button> --}}
                                             <button type="submit" class="btn btn-light mb-2 me-1"><i class="uil-print"></i>
                                                 Excel</button>
                                             <a href="#" class="btn btn-primary mb-2 me-1"
@@ -65,7 +65,7 @@
                                             placeholder="Tanggal">
                                     </div>
                                     <div class="col md-2">
-                                        <button type="button" class="btn btn-primary"
+                                        <button type="button" class="btn btn-success"
                                             onclick="tampilkanData()">Filter</button>
                                     </div>
                                 </div>

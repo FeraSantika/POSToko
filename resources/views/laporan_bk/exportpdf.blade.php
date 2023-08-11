@@ -47,12 +47,18 @@
     <div class="container">
         <div class="d-flex align-items-center mb-3">
             <h3 class="card-title text-primary">Nama Toko</h3>
+            @if ($tglAwal && $tglAkhir)
+                <p>Rentang Tanggal: {{ $tglAwal }} hingga {{ $tglAkhir }}</p>
+            @else
+                <p>Rentang Tanggal: Data tanggal tidak diinputkan</p>
+            @endif
         </div>
         <h4>Laporan Barang Keluar</h4>
         <div class="table-responsive">
             <table>
                 <thead class="table-light">
                     <tr>
+                        <th>No</th>
                         <th>Nama Barang</th>
                         <th>Kategori</th>
                         <th>Terjual</th>
@@ -66,6 +72,9 @@
                 <tbody id="laporanbarang">
                     @foreach ($bk as $kodeBarang => $group)
                         <tr>
+                            <td>
+                                {{ $loop->iteration }}
+                            </td>
                             @foreach ($group->barang as $barang)
                                 <td>
                                     {{ $barang->nama_barang }}
@@ -85,7 +94,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="2">Grand Total : </td>
+                        <td colspan="3">Grand Total : </td>
                         <td id="total">{{ $total }}</td>
                     </tr>
                 </tfoot>

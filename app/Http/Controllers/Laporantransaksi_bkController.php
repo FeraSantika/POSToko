@@ -50,7 +50,7 @@ class Laporantransaksi_bkController extends Controller
             $dtbarangkeluar = Transaksi_barang_keluar::with('user')->get();
         }
 
-        $view = view('laporantransaksi_bk.exportpdf', compact('dtbarangkeluar'))->render();
+        $view = view('laporantransaksi_bk.exportpdf', compact('dtbarangkeluar', 'tglAwal', 'tglAkhir'))->render();
         $pdf = new Dompdf();
         $pdf->loadHtml($view); // Load the rendered HTML content
         $pdf->setPaper('A4', 'portrait');

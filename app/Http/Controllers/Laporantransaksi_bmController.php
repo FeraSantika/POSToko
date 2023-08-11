@@ -28,7 +28,7 @@ class Laporantransaksi_bmController extends Controller
     {
         $tglAwal = $request->input('tanggalAwal');
         $tglAkhir = $request->input('tanggalAkhir');
-        return Excel::download(new laporantransaksibmExport($tglAwal, $tglAkhir), 'Laporanbarangmasuk.xlsx');
+        return Excel::download(new laporantransaksibmExport($tglAwal, $tglAkhir), 'Laporan_Transaksi_Barang_Masuk.xlsx');
     }
 
     public function exportPDF(Request $request)
@@ -42,7 +42,7 @@ class Laporantransaksi_bmController extends Controller
             $dtbarangmasuk = Transaksi_barang_masuk::with('supplier')->get();
         }
 
-        $view = view('laporantransaksi_bm.exportpdf', compact('dtbarangmasuk'))->render();
+        $view = view('laporantransaksi_bm.exportpdf', compact('dtbarangmasuk', 'tglAwal', 'tglAkhir'))->render();
         $pdf = new Dompdf();
         $pdf->loadHtml($view);
         $pdf->setPaper('A4', 'portrait');
